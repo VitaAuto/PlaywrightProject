@@ -19,17 +19,14 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
-    - name: Install Playwright Browsers
-      run: pwsh -Command "npx playwright install"
-
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore PlaywrightProject/PlaywrightProject.csproj
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build PlaywrightProject/PlaywrightProject.csproj --no-restore --configuration Release
 
-    - name: Install Reqnroll CLI
-      run: dotnet tool install --global Reqnroll.Tool
+    - name: Install Playwright .NET Browsers
+      run: pwsh PlaywrightProject/bin/Release/net8.0/playwright.ps1 install
 
     - name: Run smoke tests
-      run: reqnroll test --filter @smoke
+      run: dotnet test PlaywrightProject/PlaywrightProject.csproj --filter "Category=smoke" --no-build --configuration Release
