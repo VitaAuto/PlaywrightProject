@@ -110,8 +110,8 @@ namespace PlaywrightProject.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("User performs some actions from Main page")]
-        [global::NUnit.Framework.TestCaseAttribute("Automation", "gdfgdfgdfgdfg", "https://www.epam.com/about/who-we-are/contact", "0", null)]
-        [global::NUnit.Framework.TestCaseAttribute("AI", "qwertyuiop", "https://www.epam.com/about/who-we-are/contact", "1", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Automation", "gdfgdfgdfg123", "https://www.epam.com/about/who-we-are/contact", "0", null)]
+        [global::NUnit.Framework.TestCaseAttribute("AI", "qwertyuiom", "https://www.epam.com/about/who-we-are/contact", "1", null)]
         public async global::System.Threading.Tasks.Task UserPerformsSomeActionsFromMainPage(string first_Search, string second_Search, string contact_Url, string @__pickleIndex, string[] exampleTags)
         {
             string[] tagsOfScenario = exampleTags;
