@@ -24,6 +24,6 @@ Feature: Main page user actions
 
   Examples:
     | first_search | second_search    | contact_url                                               |
-    | Automation   | gdfgdfgdfgdfg    | https://www.epam.com/about/who-we-are/contact             |
+    | Automation   | gdfgdfgdfg123    | https://www.epam.com/about/who-we-are/contact             |
     | AI           | qwertyuiop       | https://www.epam.com/about/who-we-are/contact             |
 
