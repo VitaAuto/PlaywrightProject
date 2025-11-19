@@ -1,4 +1,4 @@
-Feature: Main page actions
+Feature: Main page user actions
 
   Scenario Outline: User performs some actions from Main page
     Given user is on 'Main' page
