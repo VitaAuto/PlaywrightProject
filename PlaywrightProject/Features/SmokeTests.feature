@@ -1,5 +1,5 @@
 @smoke
-Feature: Smoke 2 Tests
+Feature: Smoke two tests
 
   Scenario Outline: User can open Main page
     Given user is on 'Main' page
