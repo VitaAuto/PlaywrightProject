@@ -23,13 +23,10 @@ jobs:
       run: pwsh -Command "npx playwright install"
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore PlaywrightProject/PlaywrightProject.csproj
 
     - name: Build
-      run: dotnet build --no-restore --configuration Release
-
-    - name: Install Reqnroll CLI
-      run: dotnet tool install --global Reqnroll.Tool
+      run: dotnet build PlaywrightProject/PlaywrightProject.csproj --no-restore --configuration Release
 
     - name: Run smoke tests
-      run: reqnroll test --filter @smoke
+      run: dotnet test PlaywrightProject/PlaywrightProject.csproj --filter "Category=smoke" --no-build --configuration Release
