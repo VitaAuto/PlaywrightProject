@@ -28,5 +28,8 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
 
+    - name: Install Reqnroll CLI
+      run: dotnet tool install --global Reqnroll.Tool
+
     - name: Run smoke tests
-      run: dotnet reqnroll test --filter @smoke
+      run: reqnroll test --filter @smoke
