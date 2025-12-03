@@ -10,7 +10,8 @@ namespace PlaywrightProject.Tests
         public async Task SetUp()
         {
             Driver = new PlaywrightDriver();
-            await Driver.InitAsync(1920, 1080); // Явно задаём размер
+            await Driver.InitAsync(1920, 1080);
+            //await Driver.InitAsync(1920, 1080);// Явно задаём размер
         }
 
         [TearDown]

@@ -17,21 +17,21 @@ namespace PlaywrightProject.Components
         public async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
         public async Task<string> GetTextAsync() => await Locator.InnerTextAsync();
         public async Task HoverAsync() => await Locator.HoverAsync();
-
-        /// Универсальный метод: получить текст любого сообщения по CSS-селектору
-        public async Task<string?> GetMessageTextAsync(string cssSelector)
+        public async Task WaitForVisibleAsync(int timeoutMs = 5000)
         {
-            var locator = Page.Locator(cssSelector);
-            if (await locator.IsVisibleAsync())
-                return await locator.InnerTextAsync();
-            return null;
+            await Locator.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Visible,
+                Timeout = timeoutMs
+            });
         }
-
-        /// Универсальный метод: проверить видимость любого сообщения по CSS-селектору
-        public async Task<bool> IsMessageVisibleAsync(string cssSelector)
+        public async Task WaitForHiddenAsync(int timeoutMs = 5000)
         {
-            var locator = Page.Locator(cssSelector);
-            return await locator.IsVisibleAsync();
+            await Locator.WaitForAsync(new LocatorWaitForOptions
+            {
+                State = WaitForSelectorState.Hidden,
+                Timeout = timeoutMs
+            });
         }
     }
 }
