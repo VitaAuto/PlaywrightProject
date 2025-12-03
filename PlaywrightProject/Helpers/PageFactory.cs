@@ -11,6 +11,9 @@ namespace PlaywrightProject.Helpers
             return pageName.ToLower() switch
             {
                 "main" => new MainPage(playwrightPage),
+                "services" => new ServicesPage(playwrightPage),
+                "insights" => new InsightsPage(playwrightPage),
+                "about" => new AboutPage(playwrightPage),
                 "careers" => new CareersPage(playwrightPage),
                 _ => throw new ArgumentException($"Page '{pageName}' is not defined.")
             };

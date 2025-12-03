@@ -5,7 +5,6 @@ using PlaywrightProject.Helpers;
 using PlaywrightProject.Pages;
 using Reqnroll;
 using System.Threading.Tasks;
-using PlaywrightProject.Transformations;
 
 [Binding]
 public class CommonSteps
@@ -17,11 +16,25 @@ public class CommonSteps
         _testContext = testContext;
     }
 
-    [Given(@"user is on '(.*)' page")]
+    [Given(@"user opens '(.*)' page")]
     public async Task GivenUserIsOnPage(string pageName)
     {
         _testContext.CurrentPage = PageFactory.CreatePageByName(pageName, _testContext.Page);
         await _testContext.CurrentPage.OpenAsync();
+        await _testContext.CurrentPage.WaitForLoadAsync();
+    }
+
+    [Then(@"user should be navigated to '(.*)' page")]
+    public async Task ThenUserMovesToPage(string pageName)
+    {
+        string expectedUrl = pageName.StartsWith("http")
+            ? pageName
+            : pageName.ToLower() == "main"
+                ? "https://www.epam.com/"
+                : $"https://www.epam.com/{pageName.ToLower()}";
+
+        _testContext.CurrentPage.GetCurrentUrl().Should().Be(expectedUrl, $"Должен быть переход на {pageName}");
+        Console.WriteLine($"Current page is: {expectedUrl}");
     }
 
     [When(@"user clicks ""(.*)""")]
@@ -29,9 +42,19 @@ public class CommonSteps
     {
         var element = ElementFinder.FindElementByName(_testContext.CurrentPage, elementName);
         if (element is BaseButton button)
+        {
+            var count = await button.GetCountAsync();
+            Console.WriteLine($"'{elementName}' count: {count}");
+
+            var isVisible = await button.GetIsVisibleAsync();
+            Console.WriteLine($"'{elementName}' is visible: {isVisible}");
+
+            await button.WaitForVisibleAsync(5000);
+            (await button.IsVisibleAsync()).Should().BeTrue($"Element '{elementName}' should be visible before click");
             await button.ClickAsync();
+        }
         else
-            throw new Exception($"Element '{elementName}' is not a clickable button.");
+            throw new Exception($"Element '{elementName}' is not clickable.");
     }
 
     [Then(@"""(.*)"" should be present")]
@@ -45,6 +68,24 @@ public class CommonSteps
         else
         {
             element.Should().NotBeNull($"Element '{elementName}' should be present");
+        }
+    }
+
+    [Then(@"following options should be present:")]
+    public async Task ThenTheFollowingMenuOptionsShouldBePresent(Table table)
+    {
+        foreach (var row in table.Rows)
+        {
+            var elementName = row[0];
+            var element = ElementFinder.FindElementByName(_testContext.CurrentPage, elementName);
+            if (element is BaseComponent component)
+            {
+                (await component.IsVisibleAsync()).Should().BeTrue($"Menu option '{elementName}' should be present");
+            }
+            else
+            {
+                element.Should().NotBeNull($"Menu option '{elementName}' should be present");
+            }
         }
     }
 
@@ -122,4 +163,20 @@ public class CommonSteps
         else
             throw new Exception($"Element '{elementName}' is not a button.");
     }
+
+    [Then(@"""(.*)"" should be hidden")]
+    public async Task PopupShouldNotBeVisible(string popupName)
+    {
+        var popup = ElementFinder.FindElementByName(_testContext.CurrentPage, popupName);
+        if (popup is BaseComponent component)
+        {
+            await component.WaitForHiddenAsync(); // Ожидание исчезновения компонента
+            (await component.IsVisibleAsync()).Should().BeFalse($"Popup '{popupName}' не должен быть видим");
+        }
+        else
+        {
+            popup.Should().NotBeNull($"Popup '{popupName}' не должен быть видим");
+        }
+    }
+
 }

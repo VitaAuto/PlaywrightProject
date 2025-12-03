@@ -105,22 +105,17 @@ namespace PlaywrightProject.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/MainPage.feature.ndjson", 4);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Features/MainPage.feature.ndjson", 8);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("User performs some actions from Main page")]
-        [global::NUnit.Framework.TestCaseAttribute("Automation", "gdfgdfgdfg123", "https://www.epam.com/about/who-we-are/contact", "0", null)]
-        [global::NUnit.Framework.TestCaseAttribute("AI", "qwertyuiom", "https://www.epam.com/about/who-we-are/contact", "1", null)]
-        public async global::System.Threading.Tasks.Task UserPerformsSomeActionsFromMainPage(string first_Search, string second_Search, string contact_Url, string @__pickleIndex, string[] exampleTags)
+        [global::NUnit.Framework.DescriptionAttribute("User performs transitions from Hamburger menu on Main page")]
+        public async global::System.Threading.Tasks.Task UserPerformsTransitionsFromHamburgerMenuOnMainPage()
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
-            argumentsOfScenario.Add("first_search", first_Search);
-            argumentsOfScenario.Add("second_search", second_Search);
-            argumentsOfScenario.Add("contact_url", contact_Url);
-            string pickleIndex = @__pickleIndex;
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User performs some actions from Main page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string pickleIndex = "0";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User performs transitions from Hamburger menu on Main page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 3
@@ -134,49 +129,148 @@ namespace PlaywrightProject.Features
             {
                 await this.ScenarioStartAsync();
 #line 4
-    await testRunner.GivenAsync("user is on \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 6
-    await testRunner.WhenAsync("user clicks \"Search Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line 5
+    await testRunner.ThenAsync("\"Cookie Consent popup\" should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 7
-    await testRunner.AndAsync(string.Format("user enters \'{0}\' text", first_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.WhenAsync("user clicks \"Accept All Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 8
-    await testRunner.AndAsync("user clicks \"Find Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.ThenAsync("\"Cookie Consent popup\" should be hidden", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 9
-    await testRunner.ThenAsync("search results should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 10
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
+                global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
+                            "Hamburger Menu Services Link"});
+                table1.AddRow(new string[] {
+                            "Hamburger Menu Industries Link"});
+                table1.AddRow(new string[] {
+                            "Hamburger Menu Insights Link"});
+                table1.AddRow(new string[] {
+                            "Hamburger Menu About Link"});
+                table1.AddRow(new string[] {
+                            "Hamburger Menu Careers Link"});
 #line 11
-    await testRunner.WhenAsync("user clicks \"Search Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.ThenAsync("following options should be present:", ((string)(null)), table1, "Then ");
 #line hidden
-#line 12
-    await testRunner.AndAsync(string.Format("user enters \'{0}\' text", second_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 13
-    await testRunner.AndAsync("user clicks \"Find Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
-#line hidden
-#line 14
-    await testRunner.ThenAsync("search results should not be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 16
-    await testRunner.WhenAsync("user hovers over \"Contact Us Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 17
-    await testRunner.ThenAsync("hand pointer appears over \"Contact Us Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 18
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Services Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 19
-    await testRunner.WhenAsync("user clicks \"Contact Us Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.ThenAsync("user should be navigated to \'Services\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 20
-    await testRunner.ThenAsync(string.Format("user should be navigated to \"{0}\"", contact_Url), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 21
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 22
     await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 23
-    await testRunner.ThenAsync("\"Hamburger Menu Services Link\" should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.AndAsync("user clicks \"Hamburger Menu Insights Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 24
+    await testRunner.ThenAsync("user should be navigated to \'Insights\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 26
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 27
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 28
+    await testRunner.AndAsync("user clicks \"Hamburger Menu About Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 29
+    await testRunner.ThenAsync("user should be navigated to \'About\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 31
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 32
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 33
+    await testRunner.AndAsync("user clicks \"Hamburger Menu Careers Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 34
+    await testRunner.ThenAsync("user should be navigated to \'Careers\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("User performs search from every page")]
+        [global::NUnit.Framework.TestCaseAttribute("Main", "Automation", "udf8dfgdfg123", "1", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Services", "AI", "qwertyu000", "2", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Insights", "AI", "0129834765", "3", null)]
+        [global::NUnit.Framework.TestCaseAttribute("About", "RPA", "QaWsDFDFDD", "4", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Careers", "DevOps", "Q555RRqwer", "5", null)]
+        public async global::System.Threading.Tasks.Task UserPerformsSearchFromEveryPage(string page, string first_Search, string second_Search, string @__pickleIndex, string[] exampleTags)
+        {
+            string[] tagsOfScenario = exampleTags;
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            argumentsOfScenario.Add("page", page);
+            argumentsOfScenario.Add("first_search", first_Search);
+            argumentsOfScenario.Add("second_search", second_Search);
+            string pickleIndex = @__pickleIndex;
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User performs search from every page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 37
+  this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 38
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 39
+    await testRunner.ThenAsync("\"Cookie Consent popup\" should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 41
+    await testRunner.WhenAsync("user clicks \"Accept All Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 42
+    await testRunner.ThenAsync("\"Cookie Consent popup\" should be hidden", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 44
+    await testRunner.GivenAsync(string.Format("user opens \'{0}\' page", page), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 45
+    await testRunner.ThenAsync(string.Format("user should be navigated to \'{0}\' page", page), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 47
+    await testRunner.WhenAsync("user clicks \"Search Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 48
+    await testRunner.AndAsync(string.Format("user enters \'{0}\' text", first_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 49
+    await testRunner.AndAsync("user clicks \"Find Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 50
+    await testRunner.ThenAsync("search results should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 52
+    await testRunner.WhenAsync("user clicks \"Search Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 53
+    await testRunner.AndAsync(string.Format("user enters \'{0}\' text", second_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 54
+    await testRunner.AndAsync("user clicks \"Find Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 55
+    await testRunner.ThenAsync("search results should not be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

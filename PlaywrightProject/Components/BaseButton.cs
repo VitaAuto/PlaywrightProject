@@ -25,5 +25,8 @@ namespace PlaywrightProject.Components
             var afterHover = await GetBackgroundColorAsync();
             return beforeHover != afterHover;
         }
+
+        public async Task<int> GetCountAsync() => await Locator.CountAsync();
+        public async Task<bool> GetIsVisibleAsync() => await Locator.IsVisibleAsync();
     }
 }

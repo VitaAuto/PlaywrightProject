@@ -5,8 +5,7 @@ namespace PlaywrightProject.Components
 {
     public class FooterComponent : BaseComponent
     {
-        public FooterComponent(IPage page)
-            : base(page, page.Locator("footer")) { }
+        public FooterComponent(IPage page): base(page, page.Locator("footer")) { }
 
         [Name("Cookie Policy Link")]
         public BaseButton CookiePolicyLink => new BaseButton(Page, Page.Locator("a[href*='cookie-policy']"));
