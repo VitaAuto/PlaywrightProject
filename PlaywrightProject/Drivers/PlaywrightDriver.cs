@@ -12,7 +12,7 @@ public class PlaywrightDriver
         Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
         Browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = false,
+            Headless = true,
             Args = new[] { $"--window-size={viewportWidth},{viewportHeight}" }
         });
 
