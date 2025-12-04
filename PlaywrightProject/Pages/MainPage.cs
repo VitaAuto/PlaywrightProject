@@ -1,0 +1,16 @@
+﻿using Microsoft.Playwright;
+using PlaywrightProject.Attributes;
+using PlaywrightProject.Components;
+
+namespace PlaywrightProject.Pages
+{
+    public class MainPage(IPage page) : BasePage(page)
+    {
+        public override string Url => "https://www.epam.com";
+        public HeaderComponent Header => new HeaderComponent(Page);
+        public FooterComponent Footer => new FooterComponent(Page);
+        
+        [Name("Cookie Consent popup")]
+        public CookieConsentComponent CookieConsentPopup => new CookieConsentComponent(Page);
+    }
+}
