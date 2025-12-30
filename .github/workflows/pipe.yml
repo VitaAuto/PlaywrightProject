@@ -1,10 +1,6 @@
-name: .NET Playwright Smoke Tests
+name: .NET Smoke Tests
 
 on:
-  # push:
-  #   branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
   workflow_dispatch:
 
 jobs:
@@ -21,10 +17,27 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore PlaywrightProject/PlaywrightProject.csproj
+      run: dotnet restore
 
-    - name: Build
+    - name: Build API project
+      run: dotnet build ApiPortfolioProject/ApiPortfolioProject.csproj --no-restore --configuration Release
+
+    - name: Build Playwright project
       run: dotnet build PlaywrightProject/PlaywrightProject.csproj --no-restore --configuration Release
+
+    - name: Start API in background
+      run: |
+        dotnet run --no-build --configuration Release --project ApiPortfolioProject/ApiPortfolioProject.csproj &
+        # Ждём, пока API поднимется (замени порт/протокол если нужно)
+        for i in {1..30
+}; do
+          if curl -k https://localhost:7161/swagger/index.html > /dev/null 2>&1; then
+            echo "API is up!"
+            break
+          fi
+          echo "Waiting for API to start..."
+          sleep 2
+        done
 
     - name: Install Playwright .NET Browsers
       run: pwsh PlaywrightProject/bin/Release/net8.0/playwright.ps1 install
@@ -37,7 +50,6 @@ jobs:
 
     - name: Generate Allure report
       run: allure generate allure-results --clean -o allure-report
-      # working-directory: PlaywrightProject
 
     - name: Upload Allure report as artifact
       uses: actions/upload-artifact@v4
