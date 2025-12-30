@@ -364,5 +364,5 @@ FodyWeavers.xsd
 
 # Allure test results
 allure-results/
-# (опционально, если не хотите коммитить и папку с отчетом)
+# (optional)
 allure-report/
