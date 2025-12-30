@@ -28,7 +28,7 @@ jobs:
     - name: Start API in background
       run: |
         dotnet run --no-build --configuration Release --project ApiPortfolioProject/ApiPortfolioProject.csproj &
-        # Ждём, пока API поднимется (замени порт/протокол если нужно)
+        # Ждём, пока API поднимется на https://localhost:7161
         for i in {1..30}; do
           if curl -k https://localhost:7161/swagger/index.html > /dev/null 2>&1; then
             echo "API is up!"
@@ -47,7 +47,8 @@ jobs:
     - name: Install Allure commandline
       run: npm install -g allure-commandline
 
-    - name: Generate Allure report
+    - name
+: Generate Allure report
       run: allure generate allure-results --clean -o allure-report
 
     - name: Upload Allure report as artifact
