@@ -7,11 +7,7 @@ public class UsersApiClient
 
     public UsersApiClient(string baseUrl)
     {
-        var options = new RestClientOptions(baseUrl)
-        {
-            RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true
-        };
-        _client = new RestClient(options);
+        _client = new RestClient(baseUrl);
     }
 
     public RestResponse CreateUser(User user)

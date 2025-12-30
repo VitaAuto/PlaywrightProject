@@ -14,7 +14,7 @@ public class UsersApiSteps
 
     public UsersApiSteps(UsersApiContext context)
     {
-        _api = new UsersApiClient("https://localhost:7161");
+        _api = new UsersApiClient("http://localhost:5043");
         _context = context;
     }
 
