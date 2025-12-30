@@ -20,12 +20,14 @@ namespace PlaywrightProject.Features
     [global::NUnit.Framework.TestFixtureAttribute()]
     [global::NUnit.Framework.DescriptionAttribute("Users API")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
+    [global::NUnit.Framework.CategoryAttribute("api")]
     public partial class UsersAPIFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
         
-        private static string[] featureTags = ((string[])(null));
+        private static string[] featureTags = new string[] {
+                "api"};
         
         private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Features", "Users API", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
@@ -110,13 +112,20 @@ namespace PlaywrightProject.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Create user")]
+        [global::NUnit.Framework.CategoryAttribute("smoke")]
         [global::NUnit.Framework.TestCaseAttribute("Ivan", "Ivanov", "ivan@mail.com", "true", "201", "Ivanov", "0", null)]
         [global::NUnit.Framework.TestCaseAttribute("Petr", "Petrov", "petr@mail.com", "false", "201", "Petrov", "1", null)]
         [global::NUnit.Framework.TestCaseAttribute("", "Ivanov", "ivan@mail.com", "true", "400", "FirstName is required", "2", null)]
         [global::NUnit.Framework.TestCaseAttribute("Ivan", "Ivanov", "invalidemail", "true", "400", "Email is not valid", "3", null)]
         public async global::System.Threading.Tasks.Task CreateUser(string firstName, string lastName, string email, string isActive, string status, string expectedText, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] @__tags = new string[] {
+                    "smoke"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("FirstName", firstName);
             argumentsOfScenario.Add("LastName", lastName);
@@ -128,7 +137,7 @@ namespace PlaywrightProject.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create user", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 3
+#line 5
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -138,16 +147,16 @@ namespace PlaywrightProject.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 4
+#line 6
     await testRunner.GivenAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 5
+#line 7
     await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 6
+#line 8
     await testRunner.ThenAsync(string.Format("the response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 7
+#line 9
     await testRunner.AndAsync(string.Format("the response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -172,7 +181,7 @@ namespace PlaywrightProject.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Create user with duplicate email", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 16
+#line 18
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -182,23 +191,23 @@ namespace PlaywrightProject.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 17
+#line 19
     await testRunner.GivenAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 18
+#line 20
     await testRunner.AndAsync(string.Format("I have another user with first name \"{0}\", last name \"{1}\", email \"{2}\", is activ" +
                             "e {3}", otherFirstName, otherLastName, email, otherIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 19
+#line 21
     await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 20
+#line 22
     await testRunner.AndAsync("I send a POST request to create the other user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 21
+#line 23
     await testRunner.ThenAsync("the response status should be 409", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 22
+#line 24
     await testRunner.AndAsync("the response should contain \"User with this email already exists.\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -207,12 +216,19 @@ namespace PlaywrightProject.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Update user with PUT")]
+        [global::NUnit.Framework.CategoryAttribute("smoke")]
         [global::NUnit.Framework.TestCaseAttribute("Kevin", "Lost", "kevin@mail.com", "true", "Updated", "User", "updated@mail.com", "false", "200", "Updated", "5", null)]
         [global::NUnit.Framework.TestCaseAttribute("Bob", "Brown", "bob@mail.com", "true", "", "Brown", "bob@mail.com", "true", "400", "FirstName is required", "6", null)]
         [global::NUnit.Framework.TestCaseAttribute("Carol", "White", "carol@mail.com", "true", "Test", "Test", "invalidemail", "true", "400", "Email is not valid", "7", null)]
         public async global::System.Threading.Tasks.Task UpdateUserWithPUT(string firstName, string lastName, string email, string isActive, string newFirstName, string newLastName, string newEmail, string newIsActive, string status, string expectedText, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] @__tags = new string[] {
+                    "smoke"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("FirstName", firstName);
             argumentsOfScenario.Add("LastName", lastName);
@@ -228,7 +244,7 @@ namespace PlaywrightProject.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Update user with PUT", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 28
+#line 31
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -238,20 +254,20 @@ namespace PlaywrightProject.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 29
+#line 32
     await testRunner.GivenAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 30
+#line 33
     await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 31
+#line 34
     await testRunner.AndAsync(string.Format("I send a PUT request to update the user with first name \"{0}\", last name \"{1}\", e" +
                             "mail \"{2}\", is active {3}", newFirstName, newLastName, newEmail, newIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 32
+#line 35
     await testRunner.ThenAsync(string.Format("the response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 33
+#line 36
     await testRunner.AndAsync(string.Format("the response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -260,10 +276,17 @@ namespace PlaywrightProject.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Patch user with email")]
+        [global::NUnit.Framework.CategoryAttribute("smoke")]
         [global::NUnit.Framework.TestCaseAttribute("Ivan1", "Ivanov1", "ivan1@mail.com", "true", "Petr1", "Petrov1", "other1@mail.com", "false", "invalidemail", "400", "Email is not valid", "8", null)]
         public async global::System.Threading.Tasks.Task PatchUserWithEmail(string firstName, string lastName, string email, string isActive, string otherFirstName, string otherLastName, string otherEmail, string otherIsActive, string patchEmail, string status, string expectedText, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] @__tags = new string[] {
+                    "smoke"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("FirstName", firstName);
             argumentsOfScenario.Add("LastName", lastName);
@@ -280,7 +303,7 @@ namespace PlaywrightProject.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Patch user with email", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 41
+#line 45
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -290,26 +313,26 @@ namespace PlaywrightProject.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 42
+#line 46
     await testRunner.GivenAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 43
+#line 47
     await testRunner.AndAsync(string.Format("I have another user with first name \"{0}\", last name \"{1}\", email \"{2}\", is activ" +
                             "e {3}", otherFirstName, otherLastName, otherEmail, otherIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 44
+#line 48
     await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 45
+#line 49
     await testRunner.AndAsync("I send a POST request to create the other user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 46
+#line 50
     await testRunner.AndAsync(string.Format("I send a PATCH request to update the user with email \"{0}\"", patchEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 47
+#line 51
     await testRunner.ThenAsync(string.Format("the response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 48
+#line 52
     await testRunner.AndAsync(string.Format("the response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
@@ -318,11 +341,18 @@ namespace PlaywrightProject.Features
         
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Delete user")]
+        [global::NUnit.Framework.CategoryAttribute("smoke")]
         [global::NUnit.Framework.TestCaseAttribute("Ivanka", "Ivanova", "ivanka@mail.com", "true", "9", null)]
         [global::NUnit.Framework.TestCaseAttribute("Petra", "Petrova", "petra@mail.com", "false", "10", null)]
         public async global::System.Threading.Tasks.Task DeleteUser(string firstName, string lastName, string email, string isActive, string @__pickleIndex, string[] exampleTags)
         {
-            string[] tagsOfScenario = exampleTags;
+            string[] @__tags = new string[] {
+                    "smoke"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("FirstName", firstName);
             argumentsOfScenario.Add("LastName", lastName);
@@ -332,7 +362,7 @@ namespace PlaywrightProject.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete user", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 55
+#line 60
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -342,22 +372,22 @@ namespace PlaywrightProject.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 56
+#line 61
     await testRunner.GivenAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 57
+#line 62
     await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 58
+#line 63
     await testRunner.AndAsync("I send a DELETE request to delete the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 59
+#line 64
     await testRunner.ThenAsync("the response status should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 60
+#line 65
     await testRunner.WhenAsync("I send a GET request to get the user by id", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 61
+#line 66
     await testRunner.ThenAsync("the response status should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -374,7 +404,7 @@ namespace PlaywrightProject.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Delete user by non-existing id", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 68
+#line 73
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -384,10 +414,10 @@ namespace PlaywrightProject.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 69
+#line 74
     await testRunner.WhenAsync("I send a DELETE request to delete the user by id 99999", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 70
+#line 75
     await testRunner.ThenAsync("the response status should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
