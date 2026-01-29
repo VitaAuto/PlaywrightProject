@@ -28,7 +28,6 @@ jobs:
     - name: Start API in background
       run: |
         dotnet run --no-build --configuration Release --project ApiPortfolioProject/ApiPortfolioProject.csproj &
-        # Ждём, пока API поднимется на http://localhost:5043
         for i in {1..30}; do
           if curl http://localhost:5043/swagger/index.html > /dev/null 2>&1; then
             echo "API is up!"
@@ -40,6 +39,9 @@ jobs:
 
     - name: Install Playwright .NET Browsers
       run: pwsh PlaywrightProject/bin/Release/net8.0/playwright.ps1 install
+
+    - name: Clean Allure results
+      run: rm -rf allure-results
 
     - name: Run smoke tests
       run: dotnet test PlaywrightProject/PlaywrightProject.csproj --filter "Category=smoke" --no-build --configuration Release
