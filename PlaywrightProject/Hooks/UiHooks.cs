@@ -18,7 +18,6 @@ public class UiHooks(TestContext testContext)
         await _driver.InitAsync();
         _testContext.Page = _driver.Page;
 
-        // --- Set User-Agent for Chrome ---
         await _testContext.Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string>
         {
             ["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -40,7 +39,7 @@ public class UiHooks(TestContext testContext)
                 Path = filePath,
                 FullPage = true
             });
-            System.Console.WriteLine($"Скриншот после шага сохранён: {filePath}");
+            System.Console.WriteLine($"Screenshot saved: {filePath}");
         }
     }
 

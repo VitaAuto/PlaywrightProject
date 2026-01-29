@@ -226,7 +226,6 @@ namespace PlaywrightProject.Tests.UnitTests
                 IsActive = isActive
             };
 
-            // Для "At least one field..." не нужен пользователь
             if (expectedMessage == "At least one field must be provided for patch.")
             {
                 var result = _controller.PatchUser(1, patch);
@@ -235,7 +234,6 @@ namespace PlaywrightProject.Tests.UnitTests
                 return;
             }
 
-            // Для остальных нужен пользователь
             var user = new User { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
             _repoMock.Setup(r => r.GetUser(1)).Returns(user);
 

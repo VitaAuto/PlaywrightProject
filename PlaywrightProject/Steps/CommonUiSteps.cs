@@ -170,7 +170,7 @@ public class CommonUiSteps
         var popup = ElementFinder.FindElementByName(_testContext.CurrentPage, popupName);
         if (popup is BaseComponent component)
         {
-            await component.WaitForHiddenAsync(); // Ожидание исчезновения компонента
+            await component.WaitForHiddenAsync();
             (await component.IsVisibleAsync()).Should().BeFalse($"Popup '{popupName}' не должен быть видим");
         }
         else

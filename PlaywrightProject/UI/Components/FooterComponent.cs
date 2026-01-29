@@ -22,6 +22,5 @@ namespace PlaywrightProject.UI.Components
         [Name("YouTube Link")]
         public BaseButton YouTubeLink => new BaseButton(Page, Page.Locator("a[href*='youtube.com']"));
 
-        // Добавь другие элементы футера по необходимости
     }
 }
