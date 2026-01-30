@@ -29,13 +29,11 @@ namespace PlaywrightProject.UI.Pages
             await Page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
         }
 
-        // Новый метод: ожидание перехода по URL (шаблон поддерживает wildcard)
         public async Task WaitForUrlAsync(string urlPattern)
         {
             await Page.WaitForURLAsync(urlPattern);
         }
 
-        // Новый метод: получить текущий URL страницы
         public string GetCurrentUrl()
         {
             return Page.Url;
