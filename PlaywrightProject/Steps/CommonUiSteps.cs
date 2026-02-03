@@ -33,7 +33,7 @@ public class CommonUiSteps
                 ? "https://www.epam.com/"
                 : $"https://www.epam.com/{pageName.ToLower()}";
 
-        _testContext.CurrentPage.GetCurrentUrl().Should().Be(expectedUrl, $"Должен быть переход на {pageName}");
+        _testContext.CurrentPage.GetCurrentUrl().Should().Be(expectedUrl, $"Should be navigated to {pageName}");
         Console.WriteLine($"Current page is: {expectedUrl}");
     }
 
@@ -93,7 +93,7 @@ public class CommonUiSteps
     public async Task ThenIShouldBeNavigatedTo(string expectedUrl)
     {
         await _testContext.CurrentPage.WaitForUrlAsync(expectedUrl);
-        _testContext.CurrentPage.GetCurrentUrl().Should().Be(expectedUrl, $"Должен быть переход на {expectedUrl}");
+        _testContext.CurrentPage.GetCurrentUrl().Should().Be(expectedUrl, $"Should be navigated to {expectedUrl}");
     }
 
     [When(@"user enters '(.*)' text")]
@@ -171,11 +171,11 @@ public class CommonUiSteps
         if (popup is BaseComponent component)
         {
             await component.WaitForHiddenAsync();
-            (await component.IsVisibleAsync()).Should().BeFalse($"Popup '{popupName}' не должен быть видим");
+            (await component.IsVisibleAsync()).Should().BeFalse($"Popup '{popupName}' should not be visible");
         }
         else
         {
-            popup.Should().NotBeNull($"Popup '{popupName}' не должен быть видим");
+            popup.Should().NotBeNull($"Popup '{popupName}' should not be visible");
         }
     }
 

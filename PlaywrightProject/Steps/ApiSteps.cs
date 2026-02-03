@@ -19,7 +19,7 @@ public class UsersApiSteps
     }
 
     [Given(@"I have a user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
-    public void GivenIHaveAUserWithData(string firstName, string lastName, string email, bool isActive)
+    public void GivenIHaveUserWithData(string firstName, string lastName, string email, bool isActive)
     {
         _context.User = new User
         {
@@ -43,7 +43,7 @@ public class UsersApiSteps
     }
 
     [When(@"I send a POST request to create the user")]
-    public void WhenISendAPOSTRequestToCreateTheUser()
+    public void WhenISendPOSTRequestToCreateUser()
     {
         var resp = _api.CreateUser(_context.User);
         _context.Response = resp;
@@ -63,7 +63,7 @@ public class UsersApiSteps
     }
 
     [When(@"I send a POST request to create the other user")]
-    public void WhenISendAPOSTRequestToCreateTheOtherUser()
+    public void WhenISendPOSTRequestToCreateOtherUser()
     {
         var resp = _api.CreateUser(_context.OtherUser);
         _context.Response = resp;
@@ -83,7 +83,7 @@ public class UsersApiSteps
     }
 
     [When(@"I send a PUT request to update the user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
-    public void WhenISendAPutRequestToUpdateTheUserWithData(string firstName, string lastName, string email, bool isActive)
+    public void WhenISendPutRequestToUpdateUserWithData(string firstName, string lastName, string email, bool isActive)
     {
         var updatedUser = new User
         {
@@ -97,46 +97,46 @@ public class UsersApiSteps
     }
 
     [When(@"I send a PATCH request to update the user with email ""(.*)""")]
-    public void WhenISendAPatchRequestToUpdateTheUserWithEmail(string email)
+    public void WhenISendPatchRequestToUpdateUserWithEmail(string email)
     {
         var patchDto = new { Email = email };
         _context.Response = _api.PatchUser(_context.UserId, patchDto);
     }
 
     [When(@"I send a DELETE request to delete the user")]
-    public void WhenISendADeleteRequestToDeleteTheUser()
+    public void WhenISendDeleteRequestToDeleteUser()
     {
         Console.WriteLine($"Deletion the user with id: {_context.UserId}");
         _context.Response = _api.DeleteUser(_context.UserId);
     }
 
     [When(@"I send a DELETE request to delete the user by id (\d+)")]
-    public void WhenISendADeleteRequestToDeleteTheUserById(int id)
+    public void WhenISendDeleteRequestToDeleteUserById(int id)
     {
         _context.Response = _api.DeleteUser(id);
     }
 
     [When(@"I send a GET request to get the user by id")]
-    public void WhenISendAGetRequestToGetTheUserById()
+    public void WhenISendGetRequestToGetUserById()
     {
         Console.WriteLine($"Deletion the user with id: {_context.UserId}");
         _context.Response = _api.GetUser(_context.UserId);
     }
 
     [When(@"I send a GET request to get the user by id (\d+)")]
-    public void WhenISendAGetRequestToGetTheUserById(int id)
+    public void WhenISendGetRequestToGetUserById(int id)
     {
         _context.Response = _api.GetUser(id);
     }
 
     [Then(@"the response status should be (.*)")]
-    public void ThenTheResponseStatusShouldBe(int statusCode)
+    public void ThenResponseStatusShouldBe(int statusCode)
     {
         ((int)_context.Response.StatusCode).Should().Be(statusCode);
     }
 
     [Then(@"the response should contain ""(.*)""")]
-    public void ThenTheResponseShouldContain(string expectedText)
+    public void ThenResponseShouldContain(string expectedText)
     {
         _context.Response.Content.Should().Contain(expectedText);
     }
