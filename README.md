@@ -19,7 +19,6 @@ The project currently implements UI tests, has a prepared structure for API test
 - **Pages/** — Page Objects for application pages.
 - **Steps/** — Step definitions for BDD scenarios (UI and API).
 - **Tests/** — Base classes for tests (NUnit).
-- **Transformations/** — Step argument transformations.
 - **API/** — Folder for API automation:
   - **Models/** — Request/response models for API.
   - **Clients/** — Classes for sending HTTP requests.
@@ -36,7 +35,7 @@ The project currently implements UI tests, has a prepared structure for API test
 - **FluentAssertions** — Modern assertions.
 - **Headless mode** — Tests run without browser UI (default setting).
 - **CI/CD** — Smoke tests run via YAML pipeline.
-- **(Planned) Allure** — Test reporting.
+- **Allure** — Test reporting.
 - **(Planned) Mocking** — For API and edge cases.
 
 ---
