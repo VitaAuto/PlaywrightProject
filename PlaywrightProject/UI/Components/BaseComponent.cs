@@ -14,7 +14,7 @@ namespace PlaywrightProject.UI.Components
             Locator = locator;
         }
 
-        public async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
+        public virtual async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
         public async Task<string> GetTextAsync() => await Locator.InnerTextAsync();
         public async Task HoverAsync() => await Locator.HoverAsync();
         public async Task WaitForVisibleAsync(int timeoutMs = 5000)

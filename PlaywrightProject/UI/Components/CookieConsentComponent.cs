@@ -12,5 +12,5 @@ public class CookieConsentComponent : BaseComponent
     [Name("Cookie Settings Button")]
     public BaseButton CookieSettingsButton => new BaseButton(Page, Page.Locator("button#onetrust-pc-btn-handler.cookie-setting-link"));
 
-    public new async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
+    public async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
 }

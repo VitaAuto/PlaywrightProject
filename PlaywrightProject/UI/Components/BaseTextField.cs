@@ -8,10 +8,7 @@ namespace PlaywrightProject.UI.Components
 
         public async Task FillAsync(string text) => await Locator.FillAsync(text);
 
-        public async Task ClearAsync()
-        {
-            await Locator.FillAsync("");
-        }
+        public async Task ClearAsync() => await Locator.FillAsync("");
 
         public async Task<string> GetValueAsync() => await Locator.InputValueAsync();
 
@@ -19,7 +16,7 @@ namespace PlaywrightProject.UI.Components
 
         public async Task<bool> IsEnabledAsync() => await Locator.IsEnabledAsync();
 
-        public new async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
+        public async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
 
         public async Task<string?> GetPlaceholderAsync() => await Locator.GetAttributeAsync("placeholder");
     }
