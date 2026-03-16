@@ -25,6 +25,24 @@ jobs:
     - name: Build Playwright project
       run: dotnet build PlaywrightProject/PlaywrightProject.csproj --no-restore --configuration Release
 
+    - name: Start Vault in Docker
+      run: |
+        docker run -d --name vault -e 'VAULT_DEV_ROOT_TOKEN_ID=myroot' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200' -p 8200:8200 vault:latest
+        for i in {1..10}; do
+          if curl http://localhost:8200/v1/sys/health > /dev/null 2>&1; then
+            echo "Vault is up!"
+            break
+          fi
+          echo "Waiting for Vault to start..."
+          sleep 2
+        done
+
+    - name: Set environment variables
+      run: |
+        echo "VAULT_URI=http://localhost:8200" >> $GITHUB_ENV
+        echo "VAULT_TOKEN=myroot" >> $GITHUB_ENV
+        echo "API_BASE_URL=http://localhost:5043" >> $GITHUB_ENV
+
     - name: Start API in background
       run: |
         dotnet run --no-build --configuration Release --project ApiPortfolioProject/ApiPortfolioProject.csproj &
