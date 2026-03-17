@@ -11,41 +11,18 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-    - name: Restore dependencies
-      run: dotnet restore
-
-    - name: Build API project
-      run: dotnet build ApiPortfolioProject/ApiPortfolioProject.csproj --no-restore --configuration Release
-
-    - name: Build Playwright project
-      run: dotnet build PlaywrightProject/PlaywrightProject.csproj --no-restore --configuration Release
-
-    - name: Start Vault in Docker
+    - name: Set up Docker Compose
       run: |
-        docker run -d --name vault -e 'VAULT_DEV_ROOT_TOKEN_ID=myroot' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200' -p 8200:8200 hashicorp/vault:1.15.5
-        for i in {1..10}; do
-          if curl http://localhost:8200/v1/sys/health > /dev/null 2>&1; then
-            echo "Vault is up!"
-            break
-          fi
-          echo "Waiting for Vault to start..."
-          sleep 2
-        done
+        docker compose version || docker-compose version
 
-    - name: Set environment variables
-      run: |
-        echo "VAULT_URI=http://localhost:8200" >> $GITHUB_ENV
-        echo "VAULT_TOKEN=myroot" >> $GITHUB_ENV
-        echo "API_BASE_URL=http://localhost:5043" >> $GITHUB_ENV
+    - name: Build and start services
+      run: docker-compose up -d --build
 
-    - name: Start API in background
+    - name: Wait for API to be ready
       run: |
-        dotnet run --no-build --configuration Release --project ApiPortfolioProject/ApiPortfolioProject.csproj &
         for i in {1..30}; do
           if curl http://localhost:5043/swagger/index.html > /dev/null 2>&1; then
             echo "API is up!"
@@ -55,6 +32,17 @@ jobs:
           sleep 2
         done
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Playwright project
+      run: dotnet build PlaywrightProject/PlaywrightProject.csproj --no-restore --configuration Release
+
     - name: Install Playwright .NET Browsers
       run: pwsh PlaywrightProject/bin/Release/net8.0/playwright.ps1 install
 
@@ -62,6 +50,10 @@ jobs:
       run: rm -rf allure-results
 
     - name: Run smoke tests
+      env:
+        API_BASE_URL: ${{ secrets.API_BASE_URL }}
+        VAULT_URI: ${{ secrets.VAULT_URI }}
+        VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
       run: dotnet test PlaywrightProject/PlaywrightProject.csproj --filter "Category=smoke" --no-build --configuration Release
 
     - name: Install Allure commandline
