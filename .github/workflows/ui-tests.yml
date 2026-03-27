@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
+  ui-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -48,25 +48,13 @@ jobs:
       - name: Clean Allure results
         run: rm -rf allure-results
 
-  ui-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
       - name: Run UI tests
         env:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           VAULT_URI: ${{ secrets.VAULT_URI }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
         run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=ui" --no-build --configuration Release
-
+      
       - name: Install Allure commandline
         run: npm install -g allure-commandline
 
@@ -76,5 +64,11 @@ jobs:
       - name: Upload Allure report as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: allure-report-ui
+          name: allure-report
           path: allure-report
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: allure-report
