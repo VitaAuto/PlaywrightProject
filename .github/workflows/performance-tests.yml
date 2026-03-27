@@ -55,6 +55,7 @@ jobs:
           "K6_PASSWORD=$($CREDS.data.data.password)" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Run k6 performance tests and save result
+
         run: k6 run --out json=k6-result.json ApiAndUiProject/Tests/Performance/users-api-crud.js
 
       - name: Set up Node.js
@@ -62,13 +63,17 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install k6-to-allure and Allure commandline
-        run: |
-          npm install -g https://github.com/qa-minds/k6-to-allure.git
-          npm install -g allure-commandline
+      - name: Clone k6-to-allure repo
+        run: git clone https://github.com/qa-minds/k6-to-allure.git
+
+      - name: Install dependencies for k6-to-allure
+        run: cd k6-to-allure && npm install
 
       - name: Convert k6 JSON to Allure results
-        run: k6-to-allure k6-result.json --out allure-results
+        run: node k6-to-allure/src/index.js k6-result.json --out allure-results
+
+      - name: Install Allure commandline
+        run: npm install -g allure-commandline
 
       - name: Generate Allure report
         run: allure generate allure-results --clean -o allure-report
