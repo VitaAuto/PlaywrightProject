@@ -66,10 +66,10 @@ jobs:
         run: npm install k6-html-reporter
 
       - name: Debug - show files
-        run: ls -l node_modules/k6-html-reporter/dist/src/
+        run: ls -l node_modules/k6-html-reporter/
 
       - name: Generate k6 HTML report
-        run: node node_modules/k6-html-reporter/dist/src/cli.js --json k6-result.json --out k6-report.html
+        run: node node_modules/k6-html-reporter/cli.js --json k6-result.json --out k6-report.html
 
       - name: Upload k6 HTML report as artifact
         uses: actions/upload-artifact@v4
