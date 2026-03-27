@@ -53,7 +53,7 @@ jobs:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           VAULT_URI: ${{ secrets.VAULT_URI }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-        run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=api" --no-build
+        run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=api" --no-build --configuration Release
       
       - name: Install Allure commandline
         run: npm install -g allure-commandline
