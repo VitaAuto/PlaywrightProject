@@ -62,10 +62,13 @@ jobs:
 
       - name: Run API tests and save TRX results
         env:
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          VAULT_URI: ${{ secrets.VAULT_URI }}
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
+          API_BASE_URL: http://localhost:5043
+          VAULT_URI: http://localhost:8200
+          VAULT_TOKEN: root
         run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=api" --no-build --configuration Release --logger "trx;LogFileName=api-results.trx"
+
+      - name: List TestResults folder (debug)
+        run: ls -l ApiAndUiProject/TestResults || true
 
       - name: Test Report
         uses: dorny/test-reporter@v1
