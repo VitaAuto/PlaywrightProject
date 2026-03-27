@@ -54,12 +54,5 @@ jobs:
           "K6_USERNAME=$($CREDS.data.data.username)" | Out-File -FilePath $env:GITHUB_ENV -Append
           "K6_PASSWORD=$($CREDS.data.data.password)" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Run k6 performance tests and save result
-        run: k6 run --out json=k6-result.json ApiAndUiProject/Tests/Performance/users-api-crud.js
-
-      - name: Upload k6 JSON result as artifact
-
-        uses: actions/upload-artifact@v4
-        with:
-          name: k6-result
-          path: k6-result.json
+      - name: Run k6 performance tests with InfluxDB output
+        run: k6 run --out influxdb=http://localhost:8086/k6 ApiAndUiProject/Tests/Performance/users-api-crud.js
