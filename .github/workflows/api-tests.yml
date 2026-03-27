@@ -60,12 +60,20 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Run API tests
+      - name: Run API tests and save TRX
         env:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           VAULT_URI: ${{ secrets.VAULT_URI }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-        run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=api" --no-build --configuration Release
+        run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=api" --no-build --configuration Release --logger "trx;LogFileName=api-results.trx"
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: API Tests
+          path: ApiAndUiProject/TestResults/api-results.trx
+          reporter: dotnet-trx
 
       - name: Install Allure commandline
         run: npm install -g allure-commandline
@@ -78,3 +86,9 @@ jobs:
         with:
           name: allure-report-api
           path: allure-report
+
+      - name: Upload TRX test results as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-results-trx
+          path: ApiAndUiProject/TestResults/api-results.trx
