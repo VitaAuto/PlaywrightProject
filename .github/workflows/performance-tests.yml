@@ -64,7 +64,7 @@ jobs:
 
       - name: Install k6-to-allure and Allure commandline
         run: |
-          npm install -g qa-minds/k6-to-allure
+          npm install -g https://github.com/qa-minds/k6-to-allure.git
           npm install -g allure-commandline
 
       - name: Convert k6 JSON to Allure results
