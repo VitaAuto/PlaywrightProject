@@ -36,7 +36,7 @@ services:
 
   api:
     build:
-      context: ./ApiPortfolioProject
+      context: ./ApiControllerProject
       dockerfile: Dockerfile
     environment:
       Vault__Uri: "http://vault:8200"
