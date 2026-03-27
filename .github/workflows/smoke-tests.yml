@@ -1,4 +1,4 @@
-name: .NET Tests
+name: Smoke Tests
 
 on:
   workflow_dispatch:
@@ -6,8 +6,6 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
-    outputs:
-      api_url: ${{ steps.set_api_url.outputs.api_url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -79,66 +77,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report-smoke
-          path: allure-report
-
-  api-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Run API tests
-        env:
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          VAULT_URI: ${{ secrets.VAULT_URI }}
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-        run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=api" --no-build --configuration Release
-
-      - name: Install Allure commandline
-        run: npm install -g allure-commandline
-
-      - name: Generate Allure report
-        run: allure generate allure-results --clean -o allure-report
-
-      - name: Upload Allure report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report-api
-          path: allure-report
-
-  ui-tests:
-    needs: setup
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Run UI tests
-        env:
-          API_BASE_URL: ${{ secrets.API_BASE_URL }}
-          VAULT_URI: ${{ secrets.VAULT_URI }}
-          VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
-        run: dotnet test ApiAndUiProject/ApiAndUiProject.csproj --filter "Category=ui" --no-build --configuration Release
-
-      - name: Install Allure commandline
-        run: npm install -g allure-commandline
-
-      - name: Generate Allure report
-        run: allure generate allure-results --clean -o allure-report
-
-      - name: Upload Allure report as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report-ui
           path: allure-report
