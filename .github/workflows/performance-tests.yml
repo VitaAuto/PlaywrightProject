@@ -29,15 +29,12 @@ jobs:
             sleep 2
           done
 
-      - name: Install Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.21'
-
-      - name: Build k6 with Allure output
+      - name: Install k6
         run: |
-          go install go.k6.io/xk6/cmd/xk6@latest
-          xk6 build v0.48.0 --output k6-allure --with github.com/szkiba/xk6-output-allure@latest
+          curl -L -o k6.tar.gz https://github.com/grafana/k6/releases/download/v0.48.0/k6-v0.48.0-linux-amd64.tar.gz
+          tar -xzf k6.tar.gz
+          sudo mv k6-v0.48.0-linux-amd64/k6 /usr/local/bin/
+          k6 version
 
       - name: Wait for Vault to be ready
         run: |
@@ -57,28 +54,12 @@ jobs:
           "K6_USERNAME=$($CREDS.data.data.username)" | Out-File -FilePath $env:GITHUB_ENV -Append
           "K6_PASSWORD=$($CREDS.data.data.password)" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-      - name: Run k6 with Allure output
-        run: ./k6-allure run --out allure=allure-results ApiAndUiProject/Tests/Performance/users-api-crud.js
+      - name: Run k6 performance tests and save result
+        run: k6 run --out json=k6-result.json ApiAndUiProject/Tests/Performance/users-api-crud.js
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+      - name: Upload k6 JSON result as artifact
 
-      - name: Install Allure commandline
-        run: npm install -g allure-commandline
-
-      - name: Generate Allure report
-        run: allure generate allure-results --clean -o allure-report
-
-      - name: Upload Allure report as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: k6-allure-report
-          path: allure-report
-
-      - name: Deploy Allure report to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: allure-report
+          name: k6-result
+          path: k6-result.json
