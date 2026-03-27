@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  k6-test:
+  k6-perfomance-tests:
     runs-on: ubuntu-latest
     env:
       API_BASE_URL: ${{ secrets.API_BASE_URL }}
@@ -62,11 +62,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install k6-html-reporter
-        run: npm install -g k6-html-reporter
+      - name: Install k6-html-reporter locally
+        run: npm install k6-html-reporter
 
       - name: Generate k6 HTML report
-        run: npx k6-html-reporter --json k6-result.json --out k6-report.html
+        run: node ./node_modules/k6-html-reporter/dist/src/cli.js --json k6-result.json --out k6-report.html
 
       - name: Upload k6 HTML report as artifact
         uses: actions/upload-artifact@v4
