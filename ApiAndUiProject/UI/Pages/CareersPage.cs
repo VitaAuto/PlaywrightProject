@@ -13,6 +13,12 @@ namespace ApiAndUiProject.UI.Pages
     public class CareersPage(IPage page) : BasePage(page)
     {
         public override string Url => "https://www.epam.com/careers";
-        public HeaderComponent Header => new HeaderComponent(Page);
+        public HeaderComponent Header => new (Page);
+        
+        [Name("Cookie Consent popup")]
+        public CookieConsentComponent CookieConsentPopup => new(Page);
+
+        [Name("Start Your Search Here Button")]
+        public BaseButton StartYourSearchHere => new (Page, Page.Locator("#main").GetByRole(AriaRole.Link, new() { Name = "Start Your Search Here" }));
     }
 }

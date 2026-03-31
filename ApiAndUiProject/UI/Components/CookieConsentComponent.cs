@@ -4,7 +4,7 @@ using ApiAndUiProject.UI.Components;
 
 public class CookieConsentComponent : BaseComponent
 {
-    public CookieConsentComponent(IPage page) : base(page, page.Locator("[aria-label='Cookie banner']")) { }
+    public CookieConsentComponent(IPage page) : base(page, page.GetByRole(AriaRole.Region, new() { Name = "Cookie banner" })) { }
 
     [Name("Accept All Button")]
     public BaseButton AcceptAllButton => new (Page, Page.Locator("button#onetrust-accept-btn-handler"));

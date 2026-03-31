@@ -14,5 +14,8 @@ namespace ApiAndUiProject.UI.Pages
     {
         public override string Url => "https://www.epam.com/about";
         public HeaderComponent Header => new HeaderComponent(Page);
+        
+        [Name("Cookie Consent popup")]
+        public CookieConsentComponent CookieConsentPopup => new(Page);
     }
 }

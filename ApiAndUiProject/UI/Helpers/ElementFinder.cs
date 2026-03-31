@@ -9,7 +9,7 @@ namespace ApiAndUiProject.UI.Helpers
 {
     public class ElementFinder : IElementFinder
     {
-        public object? FindElementByName(object pageObject, string name)
+        public BaseComponent? FindElementByName(object pageObject, string name)
         {
             var type = pageObject.GetType();
 
@@ -19,14 +19,22 @@ namespace ApiAndUiProject.UI.Helpers
                     && p.GetIndexParameters().Length == 0);
 
             if (property != null)
-                return property.GetValue(pageObject);
+            {
+                var component = property.GetValue(pageObject);
+                if (component is BaseComponent baseComponent)
+                    return baseComponent;
+            }
 
             var field = type.GetFields(BindingFlags.Instance | BindingFlags.Public)
                 .FirstOrDefault(f => f.GetCustomAttributes(typeof(NameAttribute), false)
                     .Cast<NameAttribute>().Any(a => a.Value == name));
 
             if (field != null)
-                return field.GetValue(pageObject);
+            {
+                var component = field.GetValue(pageObject);
+                if (component is BaseComponent baseComponent)
+                    return baseComponent;
+            }
 
             var method = type.GetMethods(BindingFlags.Instance | BindingFlags.Public)
                 .FirstOrDefault(m => m.GetCustomAttributes(typeof(NameAttribute), false)
@@ -40,9 +48,12 @@ namespace ApiAndUiProject.UI.Helpers
                 {
                     task.GetAwaiter().GetResult();
                     var resultProperty = task.GetType().GetProperty("Result");
-                    return resultProperty?.GetValue(task);
+                    var taskComponent = resultProperty?.GetValue(task);
+                    if (taskComponent is BaseComponent _baseComponent)
+                        return _baseComponent;
                 }
-                return result;
+                if (result is BaseComponent baseComponent)
+                    return baseComponent;
             }
 
             foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
@@ -53,13 +64,11 @@ namespace ApiAndUiProject.UI.Helpers
                 {
                     try
                     {
-                        var nestedResult = FindElementByName(value, name);
-                        if (nestedResult != null)
-                            return nestedResult;
+                        var nestedComponent = FindElementByName(value, name);
+                        if (nestedComponent != null)
+                            return nestedComponent;
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                 }
             }
 
@@ -71,13 +80,11 @@ namespace ApiAndUiProject.UI.Helpers
                 {
                     try
                     {
-                        var nestedResult = FindElementByName(value, name);
-                        if (nestedResult != null)
-                            return nestedResult;
+                        var nestedComponent = FindElementByName(value, name);
+                        if (nestedComponent != null)
+                            return nestedComponent;
                     }
-                    catch
-                    {
-                    }
+                    catch { }
                 }
             }
 

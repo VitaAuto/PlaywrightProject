@@ -14,6 +14,8 @@ namespace ApiAndUiProject.UI.Components
             Locator = locator;
         }
 
+        public async Task ClickAsync() => await Locator.ClickAsync();
+        public async Task<string> GetCursorAsync() => await Locator.EvaluateAsync<string>("el => getComputedStyle(el).cursor");
         public virtual async Task<bool> IsVisibleAsync() => await Locator.IsVisibleAsync();
         public async Task<string> GetTextAsync() => await Locator.InnerTextAsync();
         public async Task HoverAsync() => await Locator.HoverAsync();
@@ -33,5 +35,11 @@ namespace ApiAndUiProject.UI.Components
                 Timeout = timeoutMs
             });
         }
+
+        public async Task<int> GetCountAsync() => await Locator.CountAsync();
+
+        public virtual ILocator OptionsLocator => Locator;
+
+        public virtual async Task<int> GetOptionsCountAsync() => await OptionsLocator.CountAsync();
     }
 }

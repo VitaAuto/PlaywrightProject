@@ -107,17 +107,17 @@ namespace ApiAndUiProject.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/MainPage.feature.ndjson", 8);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/MainPage.feature.ndjson", 9);
         }
         
         [global::NUnit.Framework.TestAttribute()]
-        [global::NUnit.Framework.DescriptionAttribute("User performs transitions from Hamburger menu on Main page")]
-        public async global::System.Threading.Tasks.Task UserPerformsTransitionsFromHamburgerMenuOnMainPage()
+        [global::NUnit.Framework.DescriptionAttribute("Hamburger menu transitions and options on Main page")]
+        public async global::System.Threading.Tasks.Task HamburgerMenuTransitionsAndOptionsOnMainPage()
         {
             string[] tagsOfScenario = ((string[])(null));
             global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
             string pickleIndex = "0";
-            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User performs transitions from Hamburger menu on Main page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Hamburger menu transitions and options on Main page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
 #line 4
@@ -145,6 +145,9 @@ namespace ApiAndUiProject.Tests.Features
 #line 11
     await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
+#line 12
+    await testRunner.ThenAsync("\"Hamburger Menu\" contains 5 options", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
                 global::Reqnroll.Table table1 = new global::Reqnroll.Table(new string[] {
                             "Hamburger Menu Services Link"});
                 table1.AddRow(new string[] {
@@ -155,49 +158,85 @@ namespace ApiAndUiProject.Tests.Features
                             "Hamburger Menu About Link"});
                 table1.AddRow(new string[] {
                             "Hamburger Menu Careers Link"});
-#line 12
+#line 13
     await testRunner.ThenAsync("following options should be present:", ((string)(null)), table1, "Then ");
 #line hidden
-#line 19
-    await testRunner.WhenAsync("user clicks \"Hamburger Menu Services Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
 #line 20
-    await testRunner.ThenAsync("user should be navigated to \'Services\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.WhenAsync("user hovers over \"Hamburger Menu Services Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 21
+    await testRunner.ThenAsync("hand pointer should appear over \"Hamburger Menu Services Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 22
-    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Services Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 23
-    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 24
-    await testRunner.AndAsync("user clicks \"Hamburger Menu Insights Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.ThenAsync("user should be navigated to \'Services\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 25
-    await testRunner.ThenAsync("user should be navigated to \'Insights\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 26
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 27
-    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+    await testRunner.WhenAsync("user hovers over \"Hamburger Menu Industries Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 28
-    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
-#line hidden
-#line 29
-    await testRunner.AndAsync("user clicks \"Hamburger Menu About Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.ThenAsync("hand pointer should not appear over \"Hamburger Menu Industries Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 30
-    await testRunner.ThenAsync("user should be navigated to \'About\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
-#line hidden
-#line 32
     await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 33
+#line 31
     await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
+#line 32
+    await testRunner.AndAsync("user hovers over \"Hamburger Menu Insights Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 33
+    await testRunner.ThenAsync("hand pointer should appear over \"Hamburger Menu Insights Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
 #line 34
-    await testRunner.AndAsync("user clicks \"Hamburger Menu Careers Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Insights Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 35
+    await testRunner.ThenAsync("user should be navigated to \'Insights\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 37
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 38
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 39
+    await testRunner.AndAsync("user hovers over \"Hamburger Menu About Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 40
+    await testRunner.ThenAsync("hand pointer should appear over \"Hamburger Menu About Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 41
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu About Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 42
+    await testRunner.ThenAsync("user should be navigated to \'About\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 44
+    await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 45
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 46
+    await testRunner.AndAsync("user hovers over \"Hamburger Menu Careers Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line hidden
+#line 47
+    await testRunner.ThenAsync("hand pointer should appear over \"Hamburger Menu Careers Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 48
+    await testRunner.WhenAsync("user clicks \"Hamburger Menu Careers Link\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 49
     await testRunner.ThenAsync("user should be navigated to \'Careers\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
@@ -222,7 +261,7 @@ namespace ApiAndUiProject.Tests.Features
             global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("User performs search from every page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
             string[] tagsOfRule = ((string[])(null));
             global::Reqnroll.RuleInfo ruleInfo = null;
-#line 38
+#line 52
   this.ScenarioInitialize(scenarioInfo, ruleInfo);
 #line hidden
             if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
@@ -232,47 +271,101 @@ namespace ApiAndUiProject.Tests.Features
             else
             {
                 await this.ScenarioStartAsync();
-#line 39
+#line 53
     await testRunner.GivenAsync("user opens \'Main\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 40
+#line 54
     await testRunner.ThenAsync("\"Cookie Consent popup\" should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 42
+#line 56
     await testRunner.WhenAsync("user clicks \"Accept All Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 43
+#line 57
     await testRunner.ThenAsync("\"Cookie Consent popup\" should be hidden", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 45
+#line 59
     await testRunner.GivenAsync(string.Format("user opens \'{0}\' page", page), ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
-#line 46
+#line 60
     await testRunner.ThenAsync(string.Format("user should be navigated to \'{0}\' page", page), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 48
+#line 62
     await testRunner.WhenAsync("user clicks \"Search Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 49
-    await testRunner.AndAsync(string.Format("user enters \'{0}\' text", first_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 63
+    await testRunner.AndAsync(string.Format("user enters \'{0}\' text in \"Search Input\"", first_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 50
+#line 64
     await testRunner.AndAsync("user clicks \"Find Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 51
-    await testRunner.ThenAsync("search results should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 65
+    await testRunner.ThenAsync("search results should be present in \"Search Results\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
-#line 53
+#line 67
     await testRunner.WhenAsync("user clicks \"Search Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
-#line 54
-    await testRunner.AndAsync(string.Format("user enters \'{0}\' text", second_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+#line 68
+    await testRunner.AndAsync(string.Format("user enters \'{0}\' text in \"Search Input\"", second_Search), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 55
+#line 69
     await testRunner.AndAsync("user clicks \"Find Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
-#line 56
-    await testRunner.ThenAsync("search results should not be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line 70
+    await testRunner.ThenAsync("search results should not be present in \"Search Results\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+            }
+            await this.ScenarioCleanupAsync();
+        }
+        
+        [global::NUnit.Framework.TestAttribute()]
+        [global::NUnit.Framework.DescriptionAttribute("Default Country Dropdown Placeholder on Careers_Jobs page")]
+        public async global::System.Threading.Tasks.Task DefaultCountryDropdownPlaceholderOnCareers_JobsPage()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            global::System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new global::System.Collections.Specialized.OrderedDictionary();
+            string pickleIndex = "6";
+            global::Reqnroll.ScenarioInfo scenarioInfo = new global::Reqnroll.ScenarioInfo("Default Country Dropdown Placeholder on Careers_Jobs page", null, tagsOfScenario, argumentsOfScenario, featureTags, pickleIndex);
+            string[] tagsOfRule = ((string[])(null));
+            global::Reqnroll.RuleInfo ruleInfo = null;
+#line 81
+this.ScenarioInitialize(scenarioInfo, ruleInfo);
+#line hidden
+            if ((global::Reqnroll.TagHelper.ContainsIgnoreTag(scenarioInfo.CombinedTags) || global::Reqnroll.TagHelper.ContainsIgnoreTag(featureTags)))
+            {
+                await testRunner.SkipScenarioAsync();
+            }
+            else
+            {
+                await this.ScenarioStartAsync();
+#line 82
+    await testRunner.GivenAsync("user opens \'Careers\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
+#line hidden
+#line 83
+    await testRunner.ThenAsync("\"Cookie Consent popup\" should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 85
+    await testRunner.WhenAsync("user clicks \"Accept All Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 86
+    await testRunner.ThenAsync("\"Cookie Consent popup\" should be hidden", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 88
+    await testRunner.WhenAsync("user hovers over \"Start Your Search Here Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 89
+    await testRunner.ThenAsync("hand pointer should appear over \"Start Your Search Here Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 91
+    await testRunner.WhenAsync("user clicks \"Start Your Search Here Button\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 92
+    await testRunner.ThenAsync("user should be navigated to \'Careers_Jobs\' page", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+#line hidden
+#line 94
+    await testRunner.WhenAsync("user clicks \"Country Dropdown Clear\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+#line hidden
+#line 95
+    await testRunner.ThenAsync("\"Country Dropdown Default Placeholder\" should be present", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

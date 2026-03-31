@@ -26,6 +26,7 @@ namespace ApiAndUiProject.UI.Helpers
                 "insights" => Create<InsightsPage>(),
                 "about" => Create<AboutPage>(),
                 "careers" => Create<CareersPage>(),
+                "careers_jobs" => Create<CareersJobsPage>(),
                 _ => throw new ArgumentException($"Page '{pageName}' is not defined.")
             };
         }
