@@ -40,9 +40,7 @@ services:
       - SERVICES=sqs
       - DEBUG=1
       - DATA_DIR=/tmp/localstack/data
-      - LOCALSTACK_AUTH_TOKEN=ls-zinE2711-dENE-VAJo-8244-GiBemAZA551f
-    #volumes:
-      #- ./localstack-data:/tmp/localstack/data
+      - LOCALSTACK_AUTH_TOKEN=${AWS_SESSION_TOKEN}
 
   api:
     build:
@@ -54,6 +52,10 @@ services:
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
       ASPNETCORE_URLS: ${ASPNETCORE_URLS}
       ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}"
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_SESSION_TOKEN: ${AWS_SESSION_TOKEN}
+
     ports:
       - "5043:5043"
     depends_on:
