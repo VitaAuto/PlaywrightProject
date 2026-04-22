@@ -7,6 +7,9 @@ jobs:
   k6-performance-tests:
     runs-on: ubuntu-latest
     env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
       API_BASE_URL: ${{ secrets.API_BASE_URL }}
       VAULT_URI: ${{ secrets.VAULT_URI }}
       VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
@@ -37,7 +40,7 @@ jobs:
               break
             fi
             echo "Waiting for API to start..."
-            sleep 2
+            sleep 3
           done
 
       - name: Install k6
@@ -55,7 +58,7 @@ jobs:
               break
             fi
             echo "Waiting for Vault secret to be available..."
-            sleep 2
+            sleep 3
           done
 
       - name: Get credentials from Vault (pwsh)

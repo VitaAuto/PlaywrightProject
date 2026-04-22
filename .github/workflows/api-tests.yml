@@ -47,10 +47,6 @@ jobs:
             echo "Waiting for API to start..."
             sleep 3
           done
-      
-      - name: Show API container logs
-        if: always()
-        run: docker compose logs api
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
