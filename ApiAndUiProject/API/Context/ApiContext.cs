@@ -2,52 +2,22 @@
 using ApiAndUiProject.API.Models;
 using RestSharp;
 using Reqnroll;
+using Amazon.SQS;
+using Amazon.SQS.Model;
 
 namespace ApiAndUiProject.API.Context
 {
-    public class ApiContext
+    public class ApiContext(ScenarioContext scenarioContext)
     {
-        private readonly ScenarioContext _scenarioContext;
-
-        public ApiContext(ScenarioContext scenarioContext)
+        
+        public T Get<T>(string key)
         {
-            _scenarioContext = scenarioContext;
+            return scenarioContext.ContainsKey(key) ? scenarioContext.Get<T>(key) : default!;
         }
 
-        public User User
+        public void Set<T>(string key, T value)
         {
-            get => _scenarioContext.ContainsKey("User") ? _scenarioContext.Get<User>("User") : null!;
-            set => _scenarioContext.Set(value, "User");
-        }
-
-        public User OtherUser
-        {
-            get => _scenarioContext.ContainsKey("OtherUser") ? _scenarioContext.Get<User>("OtherUser") : null!;
-            set => _scenarioContext.Set(value, "OtherUser");
-        }
-
-        public int UserId
-        {
-            get => _scenarioContext.ContainsKey("UserId") ? _scenarioContext.Get<int>("UserId") : 0;
-            set => _scenarioContext.Set(value, "UserId");
-        }
-
-        public int OtherUserId
-        {
-            get => _scenarioContext.ContainsKey("OtherUserId") ? _scenarioContext.Get<int>("OtherUserId") : 0;
-            set => _scenarioContext.Set(value, "OtherUserId");
-        }
-
-        public List<int> CreatedUserIds
-        {
-            get => _scenarioContext.ContainsKey("CreatedUserIds") ? _scenarioContext.Get<List<int>>("CreatedUserIds") : new List<int>();
-            set => _scenarioContext.Set(value, "CreatedUserIds");
-        }
-
-        public RestResponse Response
-        {
-            get => _scenarioContext.ContainsKey("Response") ? _scenarioContext.Get<RestResponse>("Response") : null!;
-            set => _scenarioContext.Set(value, "Response");
+            scenarioContext.Set(value, key);
         }
     }
 }

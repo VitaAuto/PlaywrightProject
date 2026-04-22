@@ -11,17 +11,17 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace ApiAndUiProject.Tests.Features
+namespace ApiAndUiProject.Tests.Features.API
 {
     
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Users API")]
+    [global::NUnit.Framework.DescriptionAttribute("Users API tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
     [global::NUnit.Framework.CategoryAttribute("api")]
-    public partial class UsersAPIFeature
+    public partial class UsersAPITestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
@@ -29,9 +29,9 @@ namespace ApiAndUiProject.Tests.Features
         private static string[] featureTags = new string[] {
                 "api"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Tests/Features", "Users API", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Tests/Features/API", "Users API tests", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "UsersApi.feature"
+#line 1 "UsersApiTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -107,7 +107,7 @@ namespace ApiAndUiProject.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/UsersApi.feature.ndjson", 15);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/API/UsersApiTests.feature.ndjson", 15);
         }
         
         [global::NUnit.Framework.TestAttribute()]
@@ -134,23 +134,23 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.GivenAsync("user is logged in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 6
-    await testRunner.AndAsync("I have a user with first name \"Sam\", last name \"Lamour\", email \"sam@mail.com\", is" +
-                        " active true", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I have user with first name \"Sam\", last name \"Lamour\", email \"sam@mail.com\", is a" +
+                        "ctive true", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 7
-    await testRunner.AndAsync("the user email \"sam@mail.com\" is unique", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("user email \"sam@mail.com\" is unique", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 8
-    await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send POST request to create user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 9
-    await testRunner.ThenAsync("the response status should be 201", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("response status should be 201", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 10
-    await testRunner.WhenAsync("I send a GET request to get the user by id", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send GET request to get user by id", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 11
-    await testRunner.ThenAsync("the response status should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("response status should be 200", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -197,19 +197,19 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.GivenAsync("user is logged in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 16
-    await testRunner.AndAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I have user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 17
-    await testRunner.AndAsync(string.Format("the user email \"{0}\" is unique", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("user email \"{0}\" is unique", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 18
-    await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send POST request to create user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 19
-    await testRunner.ThenAsync(string.Format("the response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync(string.Format("response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 20
-    await testRunner.AndAsync(string.Format("the response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -247,23 +247,23 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.GivenAsync("user is logged in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 31
-    await testRunner.AndAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I have user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 32
     await testRunner.AndAsync(string.Format("I have another user with first name \"{0}\", last name \"{1}\", email \"{2}\", is activ" +
                             "e {3}", otherFirstName, otherLastName, email, otherIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 33
-    await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send POST request to create user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 34
-    await testRunner.AndAsync("I send a POST request to create the other user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I send POST request to create another user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 35
-    await testRunner.ThenAsync("the response status should be 409", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("response status should be 409", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 36
-    await testRunner.AndAsync("the response should contain \"User with this email already exists.\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("response should contain \"User with this email already exists.\"", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -272,8 +272,8 @@ namespace ApiAndUiProject.Tests.Features
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Update user with PUT")]
         [global::NUnit.Framework.CategoryAttribute("smoke")]
-        [global::NUnit.Framework.TestCaseAttribute("Kevin", "Lost", "kevin@mail.com", "true", "Updated", "User", "updated@mail.com", "false", "200", "Updated", "6", null)]
-        [global::NUnit.Framework.TestCaseAttribute("Bob", "Brown", "bob@mail.com", "true", "", "Brown", "bob@mail.com", "true", "400", "FirstName is required", "7", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Kevin", "Lost", "kevin@mail.com", "true", "Updated", "User", "updated@mail.com", "true", "200", "Updated", "6", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Bob", "Brown", "bob@mail.com", "true", "", "Brown", "bob@mail.com", "false", "400", "FirstName is required", "7", null)]
         [global::NUnit.Framework.TestCaseAttribute("Carol", "White", "carol@mail.com", "true", "Test", "Test", "invalidemail", "true", "400", "Email is not valid", "8", null)]
         public async global::System.Threading.Tasks.Task UpdateUserWithPUT(string firstName, string lastName, string email, string isActive, string newFirstName, string newLastName, string newEmail, string newIsActive, string status, string expectedText, string @__pickleIndex, string[] exampleTags)
         {
@@ -313,26 +313,26 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.GivenAsync("user is logged in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 45
-    await testRunner.AndAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I have user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 46
-    await testRunner.AndAsync(string.Format("the user email \"{0}\" is unique", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("user email \"{0}\" is unique", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 47
-    await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send POST request to create user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 48
-    await testRunner.ThenAsync(string.Format("the user email \"{0}\" is unique", newEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync(string.Format("user email \"{0}\" is unique", newEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 49
-    await testRunner.WhenAsync(string.Format("I send a PUT request to update the user with first name \"{0}\", last name \"{1}\", e" +
-                            "mail \"{2}\", is active {3}", newFirstName, newLastName, newEmail, newIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync(string.Format("I send PUT request to update user with first name \"{0}\", last name \"{1}\", email \"" +
+                            "{2}\", is active {3}", newFirstName, newLastName, newEmail, newIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 50
-    await testRunner.ThenAsync(string.Format("the response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync(string.Format("response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 51
-    await testRunner.AndAsync(string.Format("the response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -341,7 +341,7 @@ namespace ApiAndUiProject.Tests.Features
         [global::NUnit.Framework.TestAttribute()]
         [global::NUnit.Framework.DescriptionAttribute("Patch user with email")]
         [global::NUnit.Framework.CategoryAttribute("smoke")]
-        [global::NUnit.Framework.TestCaseAttribute("Sofia", "Rudova", "sofia@mail.com", "true", "Kui", "Serdov", "kui@mail.com", "false", "invalidemail", "400", "Email is not valid", "9", null)]
+        [global::NUnit.Framework.TestCaseAttribute("Sofia", "Rudova", "sofia@mail.com", "true", "Kui", "Serdov", "kui@mail.com", "true", "invalidemail", "400", "Email is not valid", "9", null)]
         public async global::System.Threading.Tasks.Task PatchUserWithEmail(string firstName, string lastName, string email, string isActive, string otherFirstName, string otherLastName, string otherEmail, string otherIsActive, string patchEmail, string status, string expectedText, string @__pickleIndex, string[] exampleTags)
         {
             string[] @__tags = new string[] {
@@ -381,32 +381,32 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.GivenAsync("user is logged in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 62
-    await testRunner.AndAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I have user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 63
-    await testRunner.AndAsync(string.Format("the user email \"{0}\" is unique", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("user email \"{0}\" is unique", email), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 64
     await testRunner.AndAsync(string.Format("I have another user with first name \"{0}\", last name \"{1}\", email \"{2}\", is activ" +
                             "e {3}", otherFirstName, otherLastName, otherEmail, otherIsActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 65
-    await testRunner.AndAsync(string.Format("the user email \"{0}\" is unique", otherEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("user email \"{0}\" is unique", otherEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 66
-    await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send POST request to create user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 67
-    await testRunner.AndAsync("I send a POST request to create the other user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I send POST request to create another user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 68
-    await testRunner.AndAsync(string.Format("I send a PATCH request to update the user with email \"{0}\"", patchEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I send PATCH request to update user with email \"{0}\"", patchEmail), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 69
-    await testRunner.ThenAsync(string.Format("the response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync(string.Format("response status should be {0}", status), ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 70
-    await testRunner.AndAsync(string.Format("the response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("response should contain \"{0}\"", expectedText), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -449,22 +449,22 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.GivenAsync("user is logged in", ((string)(null)), ((global::Reqnroll.Table)(null)), "Given ");
 #line hidden
 #line 80
-    await testRunner.AndAsync(string.Format("I have a user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync(string.Format("I have user with first name \"{0}\", last name \"{1}\", email \"{2}\", is active {3}", firstName, lastName, email, isActive), ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 81
-    await testRunner.WhenAsync("I send a POST request to create the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send POST request to create user", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 82
-    await testRunner.AndAsync("I send a DELETE request to delete the user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
+    await testRunner.AndAsync("I send DELETE request to delete user", ((string)(null)), ((global::Reqnroll.Table)(null)), "And ");
 #line hidden
 #line 83
-    await testRunner.ThenAsync("the response status should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("response status should be 204", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
 #line 84
-    await testRunner.WhenAsync("I send a GET request to get the user by id", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
+    await testRunner.WhenAsync("I send GET request to get user by id", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 85
-    await testRunner.ThenAsync("the response status should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("response status should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();
@@ -497,7 +497,7 @@ namespace ApiAndUiProject.Tests.Features
     await testRunner.WhenAsync("I send a DELETE request to delete the user by id 99999", ((string)(null)), ((global::Reqnroll.Table)(null)), "When ");
 #line hidden
 #line 95
-    await testRunner.ThenAsync("the response status should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
+    await testRunner.ThenAsync("response status should be 404", ((string)(null)), ((global::Reqnroll.Table)(null)), "Then ");
 #line hidden
             }
             await this.ScenarioCleanupAsync();

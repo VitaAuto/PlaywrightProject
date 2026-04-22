@@ -1,7 +1,7 @@
 ﻿using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 
-namespace ApiAndUiProject.API.ApiClient
+namespace ApiAndUiProject.API.Clients
 {
     public class VaultApiClient
     {

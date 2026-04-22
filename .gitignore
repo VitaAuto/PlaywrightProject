@@ -369,3 +369,6 @@ FodyWeavers.xsd
 allure-results/
 # (optional)
 allure-report/
+
+# Kubernetes secrets
+k8s/secrets.yaml

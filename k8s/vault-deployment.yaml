@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault
+  template:
+    metadata:
+      labels:
+        app: vault
+    spec:
+      containers:
+        - name: vault
+          image: vault:1.13.3
+          ports:
+            - containerPort: 8200
+          env:
+            - name: VAULT_DEV_ROOT_TOKEN_ID
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: VAULT_DEV_ROOT_TOKEN_ID
+            - name: VAULT_DEV_LISTEN_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config
+                  key: VAULT_DEV_LISTEN_ADDRESS
+          args: ["server", "-dev", "-dev-root-token-id=$(VAULT_DEV_ROOT_TOKEN_ID)"]

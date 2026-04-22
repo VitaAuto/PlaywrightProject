@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: csharpporfolioproject-api-controller:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5043
+          env:
+            - name: Vault__Uri
+              value: "http://vault:8200"
+            - name: Vault__Token
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: VAULT_TOKEN
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ASPNETCORE_URLS
+              valueFrom:
+                configMapKeyRef:
+                  name: project-config
+                  key: ASPNETCORE_URLS
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: POSTGRES_PASSWORD
+            - name: ConnectionStrings__DefaultConnection
+              value: "Host=db;Port=5432;Database=$(POSTGRES_DB);Username=$(POSTGRES_USER);Password=$(POSTGRES_PASSWORD)"

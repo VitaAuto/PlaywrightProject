@@ -1,31 +1,21 @@
-﻿using FluentAssertions;
-using Newtonsoft.Json;
-using ApiAndUiProject.API.ApiClient;
+﻿using Amazon.SQS.Model;
 using ApiAndUiProject.API.Auth;
+using ApiAndUiProject.API.Clients;
 using ApiAndUiProject.API.Context;
 using ApiAndUiProject.API.Models;
 using ApiAndUiProject.API.Services;
 using ApiAndUiProject.Config;
+using FluentAssertions;
+using Newtonsoft.Json;
 using Reqnroll;
+using RestSharp;
 using System.Net;
 
 namespace ApiAndUiProject.Steps
 {
     [Binding]
-    public class UsersApiSteps
+    public class UsersApiSteps(ApiContext context, UserService userService, UsersApiClient usersApiClient, ITokenProvider tokenProvider, SqsService sqsService)
     {
-        private readonly ApiContext _context;
-        private readonly UserService _userService;
-        private readonly UsersApiClient _usersApiClient;
-        private readonly ITokenProvider _tokenProvider;
-
-        public UsersApiSteps(ApiContext context, UserService userService, UsersApiClient usersApiClient, ITokenProvider tokenProvider)
-        {
-            _context = context;
-            _userService = userService;
-            _usersApiClient = usersApiClient;
-            _tokenProvider = tokenProvider;
-        }
 
         [Given(@"user is logged in")]
         public async Task GivenTheUserIsLoggedIn()
@@ -36,133 +26,187 @@ namespace ApiAndUiProject.Steps
             var authApiClient = new AuthApiClient(ApiConfig.ApiBaseUrl);
             var token = authApiClient.GetToken(username, password);
 
-            _tokenProvider.SetToken(token);
+            tokenProvider.SetToken(token);
         }
 
-        [Given(@"the user email ""(.*)"" is unique")]
-        [Then(@"the user email ""(.*)"" is unique")]
-        public void UserEmailIsUnique(string email)
+        [Given(@"user email ""(.*)"" is unique")]
+        [Then(@"user email ""(.*)"" is unique")]
+        public async Task UserEmailIsUnique(string email)
         {
-            _userService.EnsureUserEmailIsUnique(email);
+            userService.EnsureUserEmailIsUnique(email);
+            await sqsService.DeleteMessagesByEmailAsync(ApiConfig.SqsQueueUrl, email);
         }
 
-        [Given(@"I have a user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
+        [Given(@"I have user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
         public void GivenIHaveUserWithData(string firstName, string lastName, string email, bool isActive)
         {
-            _context.User = new User
+            context.Set("User", new User
             {
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
                 IsActive = isActive
-            };
+            });
         }
 
         [Given(@"I have another user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
         public void GivenIHaveAnotherUserWithData(string firstName, string lastName, string email, bool isActive)
         {
-            _context.OtherUser = new User
+            context.Set("AnotherUser", new User
             {
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
                 IsActive = isActive
-            };
+            });
         }
 
-        [When(@"I send a POST request to create the user")]
+        [When(@"I send POST request to create user")]
         public void WhenISendPOSTRequestToCreateUser()
         {
-            var response = _usersApiClient.CreateUser(_context.User);
-            _context.Response = response;
-            Console.WriteLine($"API response after creation a user: {response.Content}");
+            var correlationId = Guid.NewGuid().ToString();
+            context.Set("CorrelationId", correlationId);
+
+            var response = usersApiClient.CreateUser(context.Get<User>("User"), correlationId);
+            context.Set("Response", response);
+
             if (response.StatusCode == HttpStatusCode.Created && !string.IsNullOrEmpty(response.Content) && JsonConvert.DeserializeObject<User>(response.Content) is User createdUser)
             {
-                _context.UserId = createdUser.Id;
-                _context.User = createdUser;
-                _context.CreatedUserIds.Add(createdUser.Id);
+                context.Set("UserId", createdUser.Id);
+                context.Set("User", createdUser);
+
+                var createdUserIds = context.Get<List<int>>("CreatedUserIds") ?? [];
+                createdUserIds.Add(createdUser.Id);
+                context.Set("CreatedUserIds", createdUserIds);
             }
             else
             {
-                Console.WriteLine($"User creation error: {response.StatusCode} {response.Content}");
+                Console.WriteLine($"User creation failed: {response.StatusCode} {response.Content}");
             }
         }
 
-        [When(@"I send a POST request to create the other user")]
-        public void WhenISendPOSTRequestToCreateOtherUser()
+        [When(@"I send POST request to create another user")]
+        public void WhenISendPOSTRequestToCreateAnoherUser()
         {
-            var response = _usersApiClient.CreateUser(_context.OtherUser);
-            _context.Response = response;
-            Console.WriteLine($"API response after creation another user: {response.Content}");
+            var correlationId = Guid.NewGuid().ToString();
+            context.Set("CorrelationId", correlationId);
+
+            var response = usersApiClient.CreateUser(context.Get<User>("AnotherUser"), correlationId);
+            context.Set("Response", response);
+
             if (response.StatusCode == HttpStatusCode.Created && !string.IsNullOrEmpty(response.Content) && JsonConvert.DeserializeObject<User>(response.Content) is User createdUser)
             {
-                _context.OtherUserId = createdUser.Id;
-                _context.OtherUser = createdUser;
-                _context.CreatedUserIds.Add(createdUser.Id);
+                context.Set("AnotherUserId", createdUser.Id);
+                context.Set("AnotherUser", createdUser);
+
+                var createdUserIds = context.Get<List<int>>("CreatedUserIds") ?? [];
+                createdUserIds.Add(createdUser.Id);
+                context.Set("CreatedUserIds", createdUserIds);
             }
             else
             {
-                Console.WriteLine($"Another user creation error: {response.StatusCode} {response.Content}");
+                Console.WriteLine($"Another user creation failed: {response.StatusCode} {response.Content}");
             }
         }
 
-        [When(@"I send a PUT request to update the user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
+        [When(@"I send PUT request to update user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
         public void WhenISendPutRequestToUpdateUserWithData(string firstName, string lastName, string email, bool isActive)
         {
             var updatedUser = new User
             {
-                Id = _context.UserId,
+                Id = context.Get<int>("UserId"),
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
                 IsActive = isActive
             };
-            _context.Response = _usersApiClient.UpdateUser(_context.UserId, updatedUser);
+            context.Set("Response", usersApiClient.UpdateUser(context.Get<int>("UserId"), updatedUser));
         }
 
-        [When(@"I send a PATCH request to update the user with email ""(.*)""")]
+        [When(@"I send PATCH request to update user with email ""(.*)""")]
         public void WhenISendPatchRequestToUpdateUserWithEmail(string email)
         {
             var patchDto = new { Email = email };
-            _context.Response = _usersApiClient.PatchUser(_context.UserId, patchDto);
+            context.Set("Response", usersApiClient.PatchUser(context.Get<int>("UserId"), patchDto));
         }
 
-        [When(@"I send a DELETE request to delete the user")]
+        [When(@"I send DELETE request to delete user")]
         public void WhenISendDeleteRequestToDeleteUser()
         {
-            Console.WriteLine($"Deletion the user with id: {_context.UserId}");
-            _context.Response = _usersApiClient.DeleteUser(_context.UserId);
+            var userId = context.Get<int>("UserId");
+            context.Set("Response", usersApiClient.DeleteUser(userId));
         }
 
         [When(@"I send a DELETE request to delete the user by id (\d+)")]
         public void WhenISendDeleteRequestToDeleteUserById(int id)
         {
-            _context.Response = _usersApiClient.DeleteUser(id);
+            context.Set("Response", usersApiClient.DeleteUser(id));
         }
 
-        [When(@"I send a GET request to get the user by id")]
+        [When(@"I send GET request to get user by id")]
         public void WhenISendGetRequestToGetUserById()
         {
-            Console.WriteLine($"Get the user with id: {_context.UserId}");
-            _context.Response = _usersApiClient.GetUser(_context.UserId);
+            var userId = context.Get<int>("UserId");
+            context.Set("Response", usersApiClient.GetUser(userId));
         }
 
-        [When(@"I send a GET request to get the user by id (\d+)")]
+        [When(@"I send GET request to get user by id (\d+)")]
         public void WhenISendGetRequestToGetUserById(int id)
         {
-            _context.Response = _usersApiClient.GetUser(id);
+            context.Set("Response", usersApiClient.GetUser(id));
         }
 
-        [Then(@"the response status should be (.*)")]
+        [Then(@"response status should be (.*)")]
         public void ThenResponseStatusShouldBe(int statusCode)
         {
-            ((int)_context.Response.StatusCode).Should().Be(statusCode);
+            ((int)context.Get<RestResponse>("Response").StatusCode).Should().Be(statusCode);
         }
 
-        [Then(@"the response should contain ""(.*)""")]
+        [Then(@"response should contain ""(.*)""")]
         public void ThenResponseShouldContain(string expectedText)
         {
-            _context.Response.Content.Should().Contain(expectedText);
+            context.Get<RestResponse>("Response").Content.Should().Contain(expectedText);
+        }
+
+        [Then(@"message with CorrelationId should be present in SQS")]
+        public async Task ThenMessageWithCorrelationIdShouldBePresentInSqs()
+        {
+            var correlationId = context.Get<string>("CorrelationId");
+            var message = await sqsService.GetMessageByCorrelationIdAsync(ApiConfig.SqsQueueUrl, correlationId);
+
+            message.Should().NotBeNull($"Message with CorrelationId {correlationId} should be present in SQS");
+            context.Set("SqsMessage", message);
+        }
+
+        [Then(@"message with CorrelationId is cleared in SQS")]
+        public async Task ThenMessageWithCorrelationIdIsClearedInSqs()
+        {
+            var message = context.Get<Message>("SqsMessage") ?? throw new InvalidOperationException("No SQS message found in context!");
+            var correlationId = context.Get<string>("CorrelationId");
+            var receiptHandle = message.ReceiptHandle;
+
+            await sqsService.DeleteMessageAsync(ApiConfig.SqsQueueUrl, receiptHandle);
+        }
+
+        [Then(@"SQS message body should match user with first name ""(.*)"", last name ""(.*)"", email ""(.*)"", is active (.*)")]
+        public void ThenSqsMessageBodyShouldMatchUserData(string firstName, string lastName, string email, bool isActive)
+        {
+            var expectedUser = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                IsActive = isActive
+            };
+
+            var message = context.Get<Message>("SqsMessage");
+            var actualUser = JsonConvert.DeserializeObject<User>(message.Body);
+
+            actualUser.Should().BeEquivalentTo(expectedUser, options => options
+                .Excluding(u => u.Id)
+                .Excluding(u => u.CreatedOn)
+                .Excluding(u => u.ModifiedOn)
+            );
         }
     }
 }

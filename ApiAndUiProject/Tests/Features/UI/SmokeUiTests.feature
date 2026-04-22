@@ -1,6 +1,6 @@
 @ui
 @smoke
-Feature: Smoke tests
+Feature: Smoke UI tests
 
   Scenario Outline: User can open Main page
     Given user opens 'Main' page

@@ -3,9 +3,14 @@ using ApiControllerProject.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Amazon.SQS;
+using Microsoft.Extensions.Logging;
 
 namespace ApiControllerProject.Controllers
 {
+    [ApiExplorerSettings(GroupName = "v1")]
+    [Produces("application/json")]
+    [Consumes("application/json")]
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
@@ -15,10 +20,17 @@ namespace ApiControllerProject.Controllers
         private const string EmailExistsError = "User with this email already exists.";
         private const string EmailInvalidError = "Email is not valid.";
         private readonly IUserRepository _userRepository;
+        private readonly IAmazonSQS _sqsClient;
+        private readonly string _queueUrl;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(
+        IUserRepository userRepository,
+        IAmazonSQS sqsClient,
+        IConfiguration config)
         {
             _userRepository = userRepository;
+            _sqsClient = sqsClient;
+            _queueUrl = config.GetSection("Sqs")["QueueUrl"];
         }
         private bool IsValidEmail(string email)
         {
@@ -26,7 +38,7 @@ namespace ApiControllerProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateUser([FromBody] User user)
+        public async Task<IActionResult> CreateUser([FromBody] User user)
         {
             if (user == null)
                 return BadRequest("User data is required.");
@@ -48,6 +60,30 @@ namespace ApiControllerProject.Controllers
             var createdUser = _userRepository.CreateUser(user);
             if (createdUser == null)
                 return StatusCode(500, "User creation failed.");
+
+            var correlationId = Request.Headers["X-Correlation-Id"].FirstOrDefault();
+            if (string.IsNullOrWhiteSpace(correlationId))
+            {
+                correlationId = Guid.NewGuid().ToString();
+            }
+
+            var messageBody = System.Text.Json.JsonSerializer.Serialize(createdUser);
+            var sendMessageRequest = new Amazon.SQS.Model.SendMessageRequest
+            {
+                QueueUrl = _queueUrl,
+                MessageBody = messageBody,
+                MessageAttributes = new Dictionary<string, Amazon.SQS.Model.MessageAttributeValue>
+            {
+                { "CorrelationId", new Amazon.SQS.Model.MessageAttributeValue
+                    {
+                        DataType = "String",
+                        StringValue = correlationId ?? string.Empty
+                    }
+                }
+            }
+            };
+
+            await _sqsClient.SendMessageAsync(sendMessageRequest);
             return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, createdUser);
         }
 
@@ -68,7 +104,7 @@ namespace ApiControllerProject.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateUser(int id, [FromBody] User user)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] User user)
         {
             if (user == null)
                 return BadRequest("User data is required.");
@@ -100,11 +136,18 @@ namespace ApiControllerProject.Controllers
             user.ModifiedOn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
 
             var updatedUser = _userRepository.UpdateUser(id, user);
+            var messageBody = System.Text.Json.JsonSerializer.Serialize(updatedUser);
+            var sendMessageRequest = new Amazon.SQS.Model.SendMessageRequest
+            {
+                QueueUrl = _queueUrl,
+                MessageBody = messageBody
+            };
+            await _sqsClient.SendMessageAsync(sendMessageRequest);
             return Ok(updatedUser);
         }
 
         [HttpPatch("{id}")]
-        public IActionResult PatchUser(int id, [FromBody] UserPatchDto patch)
+        public async Task<IActionResult> PatchUser(int id, [FromBody] UserPatchDto patch)
         {
             if (patch == null)
                 return BadRequest("Patch data is required.");
@@ -149,15 +192,58 @@ namespace ApiControllerProject.Controllers
             user.ModifiedOn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
 
             var updatedUser = _userRepository.PatchUser(id, patch);
+            var messageBody = System.Text.Json.JsonSerializer.Serialize(updatedUser);
+            var sendMessageRequest = new Amazon.SQS.Model.SendMessageRequest
+            {
+                QueueUrl = _queueUrl,
+                MessageBody = messageBody
+            };
+            await _sqsClient.SendMessageAsync(sendMessageRequest);
             return Ok(updatedUser);
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteUser(int id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
+            var user = _userRepository.GetUser(id);
             var deleted = _userRepository.DeleteUser(id);
             if (!deleted)
                 return NotFound();
+
+            if (user != null)
+            {
+                var deletedUser = new
+                {
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.Email,
+                    IsActive = false,
+                    ModifiedOn = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
+                };
+
+                var messageBody = System.Text.Json.JsonSerializer.Serialize(deletedUser);
+                var correlationId = Request.Headers["X-Correlation-Id"].FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(correlationId))
+                    correlationId = Guid.NewGuid().ToString();
+
+                var sendMessageRequest = new Amazon.SQS.Model.SendMessageRequest
+                {
+                    QueueUrl = _queueUrl,
+                    MessageBody = messageBody,
+                    MessageAttributes = new Dictionary<string, Amazon.SQS.Model.MessageAttributeValue>
+            {
+                { "CorrelationId", new Amazon.SQS.Model.MessageAttributeValue
+                    {
+                        DataType = "String",
+                        StringValue = correlationId
+                    }
+                }
+            }
+                };
+                await _sqsClient.SendMessageAsync(sendMessageRequest);
+            }
+
             return NoContent();
         }
     }

@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using ApiAndUiProject.Config;
 using RestSharp;
 
-namespace ApiAndUiProject.API.ApiClient
+namespace ApiAndUiProject.API.Clients
 {
     public class AuthApiClient(string baseUrl)
     {

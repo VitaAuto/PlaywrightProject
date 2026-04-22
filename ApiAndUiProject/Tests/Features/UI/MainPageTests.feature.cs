@@ -11,17 +11,17 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace ApiAndUiProject.Tests.Features
+namespace ApiAndUiProject.Tests.Features.UI
 {
     
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Main page user actions")]
+    [global::NUnit.Framework.DescriptionAttribute("Main page tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
     [global::NUnit.Framework.CategoryAttribute("ui")]
-    public partial class MainPageUserActionsFeature
+    public partial class MainPageTestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
@@ -29,9 +29,9 @@ namespace ApiAndUiProject.Tests.Features
         private static string[] featureTags = new string[] {
                 "ui"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Tests/Features", "Main page user actions", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Tests/Features/UI", "Main page tests", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "MainPage.feature"
+#line 1 "MainPageTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -107,7 +107,7 @@ namespace ApiAndUiProject.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/MainPage.feature.ndjson", 9);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/UI/MainPageTests.feature.ndjson", 9);
         }
         
         [global::NUnit.Framework.TestAttribute()]

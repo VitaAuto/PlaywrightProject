@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-init
+spec:
+  template:
+    spec:
+      containers:
+        - name: vault-init
+          image: curlimages/curl:8.5.0
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              sleep 3 &&
+              curl --header "X-Vault-Token: $VAULT_TOKEN" --request POST --data '{"data": {"username": "'$VAULT_INIT_USERNAME'", "password": "'$VAULT_INIT_PASSWORD'", "jwtsecret": "'$VAULT_INIT_JWTSECRET'"}}' http://vault:8200/v1/secret/data/myapp
+          env:
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: VAULT_TOKEN
+            - name: VAULT_INIT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: VAULT_INIT_USERNAME
+            - name: VAULT_INIT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: VAULT_INIT_PASSWORD
+            - name: VAULT_INIT_JWTSECRET
+              valueFrom:
+                secretKeyRef:
+                  name: project-secrets
+                  key: VAULT_INIT_JWTSECRET
+      restartPolicy: OnFailure

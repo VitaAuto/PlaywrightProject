@@ -1,5 +1,5 @@
 @ui
-Feature: Main page user actions
+Feature: Main page tests
 
   Scenario Outline: Hamburger menu transitions and options on Main page
     Given user opens 'Main' page

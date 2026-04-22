@@ -3,6 +3,8 @@ using ApiControllerProject.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Amazon.SQS;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,34 +15,33 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new() { Title = "ApiControllerProject", Version = "v1" });
 
-    c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
         Name = "Authorization",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
         Scheme = "bearer"
     });
 
-    c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            new OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                Reference = new OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IVaultService, VaultService>();
-
 
 var jwtKey = "my_super_secret_key_that_is_32_chars!";
 var jwtIssuer = "yourIssuer";
@@ -65,11 +66,27 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddSingleton<IAmazonSQS>(sp =>
+{
+    var config = builder.Configuration.GetSection("Sqs");
+    var sqsConfig = new AmazonSQSConfig { ServiceURL = config["ServiceUrl"] };
+    return new AmazonSQSClient(config["AccessKey"], config["SecretKey"], sqsConfig);
+});
+
+builder.Services.AddSingleton<ISqsInitializerService, SqsInitializerService>();
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var sqsInitializer = scope.ServiceProvider.GetRequiredService<ISqsInitializerService>();
+    sqsInitializer.EnsureQueueExistsAsync("my-queue").GetAwaiter().GetResult();
+}
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
+
     app.UseSwaggerUI();
 }
 

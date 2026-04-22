@@ -4,7 +4,7 @@ using ApiAndUiProject.API.Models;
 using ApiAndUiProject.Config;
 using RestSharp;
 
-namespace ApiAndUiProject.API.ApiClient
+namespace ApiAndUiProject.API.Clients
 {
     public class UsersApiClient(string baseUrl, ITokenProvider tokenProvider)
     {
@@ -18,10 +18,11 @@ namespace ApiAndUiProject.API.ApiClient
                 request.AddHeader("Authorization", $"Bearer {token}");
         }
 
-        public RestResponse CreateUser(User user)
+        public RestResponse CreateUser(User user, string correlationId)
         {
             var request = new RestRequest(ApiConfig.Users, Method.Post);
             AddAuthHeader(request);
+            request.AddHeader("X-Correlation-Id", correlationId);
             request.AddJsonBody(user);
             return _client.Execute(request);
         }

@@ -11,18 +11,18 @@
 #region Designer generated code
 #pragma warning disable
 using Reqnroll;
-namespace ApiAndUiProject.Tests.Features
+namespace ApiAndUiProject.Tests.Features.UI
 {
     
     
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Reqnroll", "3.0.0.0")]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::NUnit.Framework.TestFixtureAttribute()]
-    [global::NUnit.Framework.DescriptionAttribute("Smoke tests")]
+    [global::NUnit.Framework.DescriptionAttribute("Smoke UI tests")]
     [global::NUnit.Framework.FixtureLifeCycleAttribute(global::NUnit.Framework.LifeCycle.InstancePerTestCase)]
     [global::NUnit.Framework.CategoryAttribute("ui")]
     [global::NUnit.Framework.CategoryAttribute("smoke")]
-    public partial class SmokeTestsFeature
+    public partial class SmokeUITestsFeature
     {
         
         private global::Reqnroll.ITestRunner testRunner;
@@ -31,9 +31,9 @@ namespace ApiAndUiProject.Tests.Features
                 "ui",
                 "smoke"};
         
-        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Tests/Features", "Smoke tests", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
+        private static global::Reqnroll.FeatureInfo featureInfo = new global::Reqnroll.FeatureInfo(new global::System.Globalization.CultureInfo("en-US"), "Tests/Features/UI", "Smoke UI tests", null, global::Reqnroll.ProgrammingLanguage.CSharp, featureTags, InitializeCucumberMessages());
         
-#line 1 "SmokeTests.feature"
+#line 1 "SmokeUiTests.feature"
 #line hidden
         
         [global::NUnit.Framework.OneTimeSetUpAttribute()]
@@ -109,7 +109,7 @@ namespace ApiAndUiProject.Tests.Features
         
         private static global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages InitializeCucumberMessages()
         {
-            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/SmokeTests.feature.ndjson", 7);
+            return new global::Reqnroll.Formatters.RuntimeSupport.FeatureLevelCucumberMessages("Tests/Features/UI/SmokeUiTests.feature.ndjson", 7);
         }
         
         [global::NUnit.Framework.TestAttribute()]

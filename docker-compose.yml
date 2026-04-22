@@ -31,6 +31,18 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+  
+  localstack:
+    image: localstack/localstack:latest
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=sqs
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+      - LOCALSTACK_AUTH_TOKEN=ls-zinE2711-dENE-VAJo-8244-GiBemAZA551f
+    #volumes:
+      #- ./localstack-data:/tmp/localstack/data
 
   api:
     build:
@@ -48,6 +60,7 @@ services:
       - vault
       - vault-init
       - db
+      - localstack
 
 volumes:
   pgdata:

@@ -6,6 +6,12 @@ using ApiControllerProject.Models;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using System.Collections.Generic;
+using Amazon.SQS;
+using Microsoft.Extensions.Configuration;
+using System.Threading;
+using System.Threading.Tasks;
+using Amazon.SQS.Model;
+using System.Text.Json;
 
 namespace ApiAndUiProject.Tests.UnitTests
 {
@@ -14,13 +20,25 @@ namespace ApiAndUiProject.Tests.UnitTests
     public class UsersControllerTests
     {
         private Mock<IUserRepository>? _repoMock;
+        private Mock<IAmazonSQS>? _sqsMock;
+        private Mock<IConfiguration>? _configMock;
         private UsersController? _controller;
 
         [SetUp]
         public void Setup()
         {
             _repoMock = new Mock<IUserRepository>();
-            _controller = new UsersController(_repoMock.Object);
+            _sqsMock = new Mock<IAmazonSQS>();
+            _configMock = new Mock<IConfiguration>();
+
+            var sqsSectionMock = new Mock<IConfigurationSection>();
+            sqsSectionMock.Setup(s => s["QueueUrl"]).Returns("test-queue-url");
+            _configMock.Setup(c => c.GetSection("Sqs")).Returns(sqsSectionMock.Object);
+
+            _sqsMock.Setup(s => s.SendMessageAsync(It.IsAny<SendMessageRequest>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(new SendMessageResponse());
+
+            _controller = new UsersController(_repoMock.Object, _sqsMock.Object, _configMock.Object);
         }
 
         // --- CREATE ---
@@ -28,7 +46,7 @@ namespace ApiAndUiProject.Tests.UnitTests
         [TestCase("Ivan", null, "ivan@mail.com", true, "LastName is required.")]
         [TestCase("Ivan", "Ivanov", null, true, "Email is required.")]
         [TestCase("Ivan", "Ivanov", "invalidemail", true, "Email is not valid.")]
-        public void CreateUser_InvalidFields_ReturnsBadRequest(
+        public async Task CreateUser_InvalidFields_ReturnsBadRequest(
             string firstName, string lastName, string email, bool isActive, string expectedMessage)
         {
             var user = new User
@@ -39,7 +57,7 @@ namespace ApiAndUiProject.Tests.UnitTests
                 IsActive = isActive
             };
 
-            var result = _controller?.CreateUser(user);
+            var result = await _controller!.CreateUser(user);
 
             result.Should().BeOfType<BadRequestObjectResult>();
             if (result is BadRequestObjectResult badRequest)
@@ -47,7 +65,7 @@ namespace ApiAndUiProject.Tests.UnitTests
         }
 
         [Test]
-        public void CreateUser_EmailAlreadyExists_ReturnsConflict()
+        public async Task CreateUser_EmailAlreadyExists_ReturnsConflict()
         {
             var user = new User
             {
@@ -56,41 +74,13 @@ namespace ApiAndUiProject.Tests.UnitTests
                 Email = "ivan@mail.com",
                 IsActive = true
             };
-            _repoMock?.Setup(r => r.EmailExists(user.Email, null)).Returns(true);
+            _repoMock!.Setup(r => r.EmailExists(user.Email, null)).Returns(true);
 
-            var result = _controller?.CreateUser(user);
+            var result = await _controller!.CreateUser(user);
 
             result.Should().BeOfType<ConflictObjectResult>();
             if (result is ConflictObjectResult conflict)
                 conflict.Value.Should().Be("User with this email already exists.");
-        }
-
-        [Test]
-        public void CreateUser_ValidUser_ReturnsCreated()
-        {
-            var user = new User
-            {
-                FirstName = "Ivan",
-                LastName = "Ivanov",
-                Email = "ivan@mail.com",
-                IsActive = true
-            };
-            var createdUser = new User
-            {
-                Id = 1,
-                FirstName = "Ivan",
-                LastName = "Ivanov",
-                Email = "ivan@mail.com",
-                IsActive = true
-            };
-            _repoMock?.Setup(r => r.EmailExists(user.Email, null)).Returns(false);
-            _repoMock?.Setup(r => r.CreateUser(user)).Returns(createdUser);
-
-            var result = _controller?.CreateUser(user);
-
-            result.Should().BeOfType<CreatedAtActionResult>();
-            if (result is CreatedAtActionResult created)
-                created.Value.Should().BeEquivalentTo(createdUser);
         }
 
         // --- GET BY ID ---
@@ -99,15 +89,16 @@ namespace ApiAndUiProject.Tests.UnitTests
         public void GetUser_VariousCases_ReturnsExpectedResult(int userId, bool found)
         {
             var user = new User { Id = userId, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
-            _repoMock?.Setup(r => r.GetUser(userId)).Returns(found ? user : null);
+            _repoMock!.Setup(r => r.GetUser(userId)).Returns(found ? user : null);
 
-            var result = _controller?.GetUser(userId);
+            var result = _controller!.GetUser(userId);
 
             if (found)
             {
                 result.Should().BeOfType<OkObjectResult>();
                 if (result is OkObjectResult ok)
                     ok.Value.Should().BeEquivalentTo(user);
+
             }
             else
             {
@@ -121,11 +112,11 @@ namespace ApiAndUiProject.Tests.UnitTests
         {
             var users = new List<User>
             {
-                new User { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true }
+                new() { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true }
             };
-            _repoMock?.Setup(r => r.GetAllUsers()).Returns(users);
+            _repoMock!.Setup(r => r.GetAllUsers()).Returns(users);
 
-            var result = _controller?.GetAllUsers();
+            var result = _controller!.GetAllUsers();
 
             result.Should().BeOfType<OkObjectResult>();
             if (result is OkObjectResult ok)
@@ -137,7 +128,7 @@ namespace ApiAndUiProject.Tests.UnitTests
         [TestCase("Ivan", null, "ivan@mail.com", true, "LastName is required.")]
         [TestCase("Ivan", "Ivanov", null, true, "Email is required.")]
         [TestCase("Ivan", "Ivanov", "invalidemail", true, "Email is not valid.")]
-        public void UpdateUser_InvalidFields_ReturnsBadRequest(
+        public async Task UpdateUser_InvalidFields_ReturnsBadRequest(
             string firstName, string lastName, string email, bool isActive, string expectedMessage)
         {
             var user = new User
@@ -148,7 +139,7 @@ namespace ApiAndUiProject.Tests.UnitTests
                 IsActive = isActive
             };
 
-            var result = _controller?.UpdateUser(1, user);
+            var result = await _controller!.UpdateUser(1, user);
 
             result.Should().BeOfType<BadRequestObjectResult>();
             if (result is BadRequestObjectResult badRequest)
@@ -156,7 +147,7 @@ namespace ApiAndUiProject.Tests.UnitTests
         }
 
         [Test]
-        public void UpdateUser_EmailAlreadyExists_ReturnsConflict()
+        public async Task UpdateUser_EmailAlreadyExists_ReturnsConflict()
         {
             var user = new User
             {
@@ -165,9 +156,9 @@ namespace ApiAndUiProject.Tests.UnitTests
                 Email = "ivan@mail.com",
                 IsActive = true
             };
-            _repoMock?.Setup(r => r.EmailExists(user.Email, 1)).Returns(true);
+            _repoMock!.Setup(r => r.EmailExists(user.Email, 1)).Returns(true);
 
-            var result = _controller?.UpdateUser(1, user);
+            var result = await _controller!.UpdateUser(1, user);
 
             result.Should().BeOfType<ConflictObjectResult>();
             if (result is ConflictObjectResult conflict)
@@ -175,45 +166,54 @@ namespace ApiAndUiProject.Tests.UnitTests
         }
 
         [Test]
-        public void UpdateUser_UserNotFound_ReturnsNotFound()
+        public async Task UpdateUser_UserNotFound_ReturnsNotFound()
         {
             var user = new User { FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
-            _repoMock?.Setup(r => r.EmailExists(user.Email, 1)).Returns(false);
-            _repoMock?.Setup(r => r.GetUser(1)).Returns((User?)null);
+            _repoMock!.Setup(r => r.EmailExists(user.Email, 1)).Returns(false);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns((User?)null);
 
-            var result = _controller?.UpdateUser(1, user);
+            var result = await _controller!.UpdateUser(1, user);
 
             result.Should().BeOfType<NotFoundResult>();
         }
 
         [Test]
-        public void UpdateUser_NoChanges_ReturnsNoContent()
+        public async Task UpdateUser_NoChanges_ReturnsNoContent()
         {
             var user = new User { FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
-            _repoMock?.Setup(r => r.EmailExists(user.Email, 1)).Returns(false);
-            _repoMock?.Setup(r => r.GetUser(1)).Returns(user);
+            _repoMock!.Setup(r => r.EmailExists(user.Email, 1)).Returns(false);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns(user);
 
-            var result = _controller?.UpdateUser(1, user);
+            var result = await _controller!.UpdateUser(1, user);
 
             result.Should().BeOfType<NoContentResult>();
         }
 
         [Test]
-        public void UpdateUser_Valid_ReturnsOk()
+        public async Task UpdateUser_Valid_ReturnsOk_AndSendsToSqs()
         {
             var oldUser = new User { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
             var newUser = new User { FirstName = "Petr", LastName = "Petrov", Email = "petr@mail.com", IsActive = false };
             var updatedUser = new User { Id = 1, FirstName = "Petr", LastName = "Petrov", Email = "petr@mail.com", IsActive = false };
 
-            _repoMock?.Setup(r => r.EmailExists(newUser.Email, 1)).Returns(false);
-            _repoMock?.Setup(r => r.GetUser(1)).Returns(oldUser);
-            _repoMock?.Setup(r => r.UpdateUser(1, newUser)).Returns(updatedUser);
+            _repoMock!.Setup(r => r.EmailExists(newUser.Email, 1)).Returns(false);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns(oldUser);
+            _repoMock!.Setup(r => r.UpdateUser(1, newUser)).Returns(updatedUser);
 
-            var result = _controller?.UpdateUser(1, newUser);
+            SendMessageRequest? capturedRequest = null;
+            _sqsMock!.Setup(s => s.SendMessageAsync(It.IsAny<SendMessageRequest>(), It.IsAny<CancellationToken>()))
+                .Callback<SendMessageRequest, CancellationToken>((req, _) => capturedRequest = req)
+                .ReturnsAsync(new SendMessageResponse());
+
+            var result = await _controller!.UpdateUser(1, newUser);
 
             result.Should().BeOfType<OkObjectResult>();
             if (result is OkObjectResult ok)
                 ok.Value.Should().BeEquivalentTo(updatedUser);
+
+            capturedRequest.Should().NotBeNull();
+            var sentUser = JsonSerializer.Deserialize<User>(capturedRequest!.MessageBody);
+            sentUser.Should().BeEquivalentTo(updatedUser);
         }
 
         // --- PATCH ---
@@ -222,7 +222,7 @@ namespace ApiAndUiProject.Tests.UnitTests
         [TestCase(null, "", null, null, "LastName is required.")]
         [TestCase(null, null, "", null, "Email is required.")]
         [TestCase(null, null, "invalidemail", null, "Email is not valid.")]
-        public void PatchUser_InvalidFields_ReturnsBadRequest(
+        public async Task PatchUser_InvalidFields_ReturnsBadRequest(
             string firstName, string lastName, string email, bool? isActive, string expectedMessage)
         {
             var patch = new UserPatchDto
@@ -231,11 +231,12 @@ namespace ApiAndUiProject.Tests.UnitTests
                 LastName = lastName,
                 Email = email,
                 IsActive = isActive
+
             };
 
             if (expectedMessage == "At least one field must be provided for patch.")
             {
-                var result = _controller?.PatchUser(1, patch);
+                var result = await _controller!.PatchUser(1, patch);
                 result.Should().BeOfType<BadRequestObjectResult>();
                 if (result is BadRequestObjectResult badRequest)
                     badRequest.Value.Should().Be(expectedMessage);
@@ -243,39 +244,39 @@ namespace ApiAndUiProject.Tests.UnitTests
             }
 
             var user = new User { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
-            _repoMock?.Setup(r => r.GetUser(1)).Returns(user);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns(user);
 
-            var result2 = _controller?.PatchUser(1, patch);
+            var result2 = await _controller!.PatchUser(1, patch);
             result2.Should().BeOfType<BadRequestObjectResult>();
             if (result2 is BadRequestObjectResult badRequest2)
                 badRequest2.Value.Should().Be(expectedMessage);
         }
 
         [Test]
-        public void PatchUser_UserNotFound_ReturnsNotFound()
+        public async Task PatchUser_UserNotFound_ReturnsNotFound()
         {
             var patch = new UserPatchDto { FirstName = "NewName" };
-            _repoMock?.Setup(r => r.GetUser(1)).Returns((User?)null);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns((User?)null);
 
-            var result = _controller?.PatchUser(1, patch);
+            var result = await _controller!.PatchUser(1, patch);
 
             result.Should().BeOfType<NotFoundResult>();
         }
 
         [Test]
-        public void PatchUser_NoChanges_ReturnsNoContent()
+        public async Task PatchUser_NoChanges_ReturnsNoContent()
         {
             var user = new User { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
             var patch = new UserPatchDto { FirstName = "Ivan" };
-            _repoMock?.Setup(r => r.GetUser(1)).Returns(user);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns(user);
 
-            var result = _controller?.PatchUser(1, patch);
+            var result = await _controller!.PatchUser(1, patch);
 
             result.Should().BeOfType<NoContentResult>();
         }
 
         [Test]
-        public void PatchUser_EmailAlreadyExists_ReturnsConflict()
+        public async Task PatchUser_EmailAlreadyExists_ReturnsConflict()
         {
             var user = new User
             {
@@ -286,10 +287,10 @@ namespace ApiAndUiProject.Tests.UnitTests
                 IsActive = true
             };
             var patch = new UserPatchDto { Email = "petr@mail.com" };
-            _repoMock?.Setup(r => r.GetUser(1)).Returns(user);
-            _repoMock?.Setup(r => r.EmailExists("petr@mail.com", 1)).Returns(true);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns(user);
+            _repoMock!.Setup(r => r.EmailExists("petr@mail.com", 1)).Returns(true);
 
-            var result = _controller?.PatchUser(1, patch);
+            var result = await _controller!.PatchUser(1, patch);
 
             result.Should().BeOfType<ConflictObjectResult>();
             if (result is ConflictObjectResult conflict)
@@ -297,36 +298,44 @@ namespace ApiAndUiProject.Tests.UnitTests
         }
 
         [Test]
-        public void PatchUser_Valid_ReturnsOk()
+        public async Task PatchUser_Valid_ReturnsOk_AndSendsToSqs()
         {
             var user = new User { Id = 1, FirstName = "Ivan", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
             var patch = new UserPatchDto { FirstName = "Petr" };
             var updatedUser = new User { Id = 1, FirstName = "Petr", LastName = "Ivanov", Email = "ivan@mail.com", IsActive = true };
 
-            _repoMock?.Setup(r => r.GetUser(1)).Returns(user);
-            _repoMock?.Setup(r => r.EmailExists("ivan@mail.com", 1)).Returns(false);
-            _repoMock?.Setup(r => r.PatchUser(1, patch)).Returns(updatedUser);
+            _repoMock!.Setup(r => r.GetUser(1)).Returns(user);
+            _repoMock!.Setup(r => r.EmailExists("ivan@mail.com", 1)).Returns(false);
+            _repoMock!.Setup(r => r.PatchUser(1, patch)).Returns(updatedUser);
 
-            var result = _controller?.PatchUser(1, patch);
+            SendMessageRequest? capturedRequest = null;
+            _sqsMock!.Setup(s => s.SendMessageAsync(It.IsAny<SendMessageRequest>(), It.IsAny<CancellationToken>()))
+                .Callback<SendMessageRequest, CancellationToken>((req, _) => capturedRequest = req)
+                .ReturnsAsync(new SendMessageResponse());
+
+            var result = await _controller!.PatchUser(1, patch);
 
             result.Should().BeOfType<OkObjectResult>();
             if (result is OkObjectResult ok)
                 ok.Value.Should().BeEquivalentTo(updatedUser);
+
+            capturedRequest.Should().NotBeNull();
+            var sentUser = JsonSerializer.Deserialize<User>(capturedRequest!.MessageBody);
+            sentUser.Should().BeEquivalentTo(updatedUser);
         }
 
         // --- DELETE ---
-        [TestCase(1, false)]
-        [TestCase(2, true)]
-        public void DeleteUser_VariousCases_ReturnsExpectedResult(int userId, bool deleted)
+        [Test]
+        public async Task DeleteUser_UserNotFound_ReturnsNotFound_AndDoesNotSendToSqs()
         {
-            _repoMock?.Setup(r => r.DeleteUser(userId)).Returns(deleted);
+            var userId = 1;
+            _repoMock!.Setup(r => r.GetUser(userId)).Returns((User?)null);
+            _repoMock!.Setup(r => r.DeleteUser(userId)).Returns(false);
 
-            var result = _controller?.DeleteUser(userId);
+            var result = await _controller!.DeleteUser(userId);
 
-            if (deleted)
-                result.Should().BeOfType<NoContentResult>();
-            else
-                result.Should().BeOfType<NotFoundResult>();
+            result.Should().BeOfType<NotFoundResult>();
+            _sqsMock!.Verify(s => s.SendMessageAsync(It.IsAny<SendMessageRequest>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using dotenv.net;
-using ApiAndUiProject.API.ApiClient;
+using ApiAndUiProject.API.Clients;
 using ApiAndUiProject.API.Context;
 using Reqnroll;
 
@@ -14,19 +14,23 @@ namespace ApiAndUiProject.Hooks
         [AfterScenario]
         public void CleanupCreatedUsers()
         {
-            foreach (var id in _context.CreatedUserIds.Distinct())
+            var createdUserIds = _context.Get<List<int>>("CreatedUserIds") ?? new List<int>();
+
+            foreach (var id in createdUserIds.Distinct())
             {
                 try
                 {
                     var resp = _usersApiClient.DeleteUser(id);
-                    Console.WriteLine($"[CLEANUP] Deleted user with id: {id}, status: {resp.StatusCode}");
+                    Console.WriteLine($"Deleted user with id: {id}, status: {resp.StatusCode}");
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"[CLEANUP] Failed to delete user with id: {id}. Error: {ex.Message}");
+                    Console.WriteLine($"Failed to delete user with id: {id}. Error: {ex.Message}");
                 }
             }
-            _context.CreatedUserIds.Clear();
+
+            createdUserIds.Clear();
+            _context.Set("CreatedUserIds", createdUserIds);
         }
     }
 }
