@@ -44,9 +44,10 @@ jobs:
               echo "API is up!"
               break
             fi
-            echo "Waiting for API to start..."
+            echo "Waiting for API to be ready..."
             sleep 3
           done
+          docker compose ps
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
